@@ -16,14 +16,13 @@ fun main(args: Array<String>) {
     bot
 }
 
-private val config: ConfigDto
-    get() {
-        val fileName = "config.yaml"
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.registerModule(KotlinModule())
+private val config: ConfigDto by lazy {
+    val fileName = "config.yaml"
+    val mapper = ObjectMapper(YAMLFactory())
+    mapper.registerModule(KotlinModule())
 
-        return Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
-    }
+    Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
+}
 
 val bot by lazy {
     fun registerListeners(registrants: () -> Unit) {
