@@ -3,8 +3,8 @@ package com.gmail.arhamjsiddiqui.runebot
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import net.dv8tion.jda.core.*
 import org.jetbrains.exposed.sql.Database
-import sx.blah.discord.api.ClientBuilder
 import java.nio.file.FileSystems
 import java.nio.file.Files
 
@@ -24,20 +24,15 @@ private val config: ConfigDto by lazy {
     Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
 }
 
-val bot by lazy {
+val bot: JDA by lazy {
     fun registerListeners(registrants: () -> Unit) {
         registrants.invoke()
     }
-
     fun registerCommands(registrants: () -> Unit) {
         registrants.invoke()
     }
 
-    val token = config.token
-    val clientBuilder = ClientBuilder()
-
-    clientBuilder.withToken(token)
-    clientBuilder.login()
+    val jda = JDABuilder(AccountType.BOT).setToken(config.token)
 
     registerListeners {
 
@@ -46,6 +41,8 @@ val bot by lazy {
     registerCommands {
 
     }
+
+    jda.buildBlocking()
 }
 
 private data class JDBCDto(val url: String, val driver: String, val user: String, val password: String)
