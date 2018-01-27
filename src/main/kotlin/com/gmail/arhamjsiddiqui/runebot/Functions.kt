@@ -29,6 +29,7 @@ object Functions {
             discordId = user.id
         }.to(user)
         RuneBot.players.put(player.second, player.first) // after making the player, we add them to the hashmap
+        RuneBot.BOT.sendMessage("Welcome to RuneBot! Your account has successfully been created!")
         return player.first
     }
 }

@@ -23,7 +23,7 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Database.connect(config.jdbc.url, config.jdbc.driver, config.jdbc.user, config.jdbc.password)
+        Database.connect(CONFIG.jdbc.url, CONFIG.jdbc.driver, CONFIG.jdbc.user, CONFIG.jdbc.password)
         transaction {
             logger.addLogger(StdOutSqlLogger)
             create(Players)
@@ -31,7 +31,7 @@ object RuneBot {
         BOT
     }
 
-    private val config: ConfigDto = let {
+    val CONFIG: ConfigDto = let {
         val fileName = "config.yaml"
         val mapper = ObjectMapper(YAMLFactory())
         mapper.registerModule(KotlinModule())
@@ -39,7 +39,6 @@ object RuneBot {
         Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
     }
 
-    val GUILD_ID = config.guildId
     val players = hashMapOf<User, Player>()
 
     val BOT: JDA = let {
@@ -50,7 +49,7 @@ object RuneBot {
             registrants.invoke()
         }
 
-        val jda = JDABuilder(AccountType.BOT).setToken(config.token).buildAsync()
+        val jda = JDABuilder(AccountType.BOT).setToken(CONFIG.token).buildAsync()
         val cmd = JDA3Handler(jda)
 
         registerCommands {
@@ -60,6 +59,10 @@ object RuneBot {
         jda
     }
 
-    private data class JDBCDto(val url: String, val driver: String, val user: String, val password: String)
-    private data class ConfigDto(val jdbc: JDBCDto, val token: String, val guildId: Long)
+    data class JDBCDto(val url: String, val driver: String, val user: String, val password: String)
+    data class ConfigDto(val jdbc: JDBCDto, val token: String, val guildId: Long, val testChannelId: Long)
+}
+
+fun JDA.sendMessage(message: String) {
+    getGuildById(RuneBot.CONFIG.guildId).getTextChannelById(RuneBot.CONFIG.testChannelId).sendMessage(message).queue()
 }

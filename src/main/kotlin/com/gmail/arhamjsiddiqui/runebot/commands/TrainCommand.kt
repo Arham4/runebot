@@ -2,6 +2,7 @@ package com.gmail.arhamjsiddiqui.runebot.commands
 
 import com.gmail.arhamjsiddiqui.runebot.Functions
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
+import com.gmail.arhamjsiddiqui.runebot.sendMessage
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
 import net.dv8tion.jda.core.entities.User
@@ -18,7 +19,6 @@ class TrainCommand : CommandExecutor {
         val exp = ThreadLocalRandom.current().nextLong(0, 50)
         val player = Functions.fetchPlayer(user)
         player.addCombatExp(exp)
-        RuneBot.BOT.getGuildById(RuneBot.GUILD_ID).getTextChannelById(405129714743771156)
-                .sendMessage("You have earned $exp EXP! Total EXP: " + player.totalExp).queue()
+        RuneBot.BOT.sendMessage("You have earned $exp EXP! Total EXP: " + player.totalExp)
     }
 }
