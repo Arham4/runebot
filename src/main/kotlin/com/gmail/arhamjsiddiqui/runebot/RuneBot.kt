@@ -10,10 +10,6 @@ import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.User
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils.create
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.transactions.transaction
 import java.nio.file.FileSystems
 import java.nio.file.Files
 
@@ -24,11 +20,6 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Database.connect(CONFIG.jdbc.url, CONFIG.jdbc.driver, CONFIG.jdbc.user, CONFIG.jdbc.password)
-        transaction {
-            logger.addLogger(StdOutSqlLogger)
-            create(Players)
-        }
         BOT
     }
 
