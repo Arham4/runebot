@@ -4,12 +4,10 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
-import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import de.btobastian.sdcf4j.handler.JDA3Handler
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
-import net.dv8tion.jda.core.entities.User
 import java.nio.file.FileSystems
 import java.nio.file.Files
 
@@ -31,8 +29,6 @@ object RuneBot {
         Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
     }
 
-    val players = hashMapOf<User, Player>()
-
     val BOT: JDA = let {
         fun registerListeners(registrants: () -> Unit) {
             registrants.invoke()
@@ -45,7 +41,6 @@ object RuneBot {
         val cmd = JDA3Handler(jda)
 
         registerCommands {
-            cmd.registerCommand(TrainCommand())
             cmd.registerCommand(HelpCommand(cmd))
         }
 
