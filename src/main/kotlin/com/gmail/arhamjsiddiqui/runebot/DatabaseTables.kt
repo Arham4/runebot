@@ -12,6 +12,6 @@ object Players : IntIdTable() {
     val discordId = text("discord_id")
     val totalLevel = integer("total_level").default(0)
     val totalExp = long("total_exp").default(0)
-    val combatLevel = integer("combat_level").default(0)
-    val combatExp = long("combat_exp").default(0)
+    val levels = blob("levels")
+    val experiences = blob("experiences")
 }

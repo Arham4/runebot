@@ -1,6 +1,6 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
-import com.gmail.arhamjsiddiqui.runebot.Functions
+import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.sendMessage
 import de.btobastian.sdcf4j.Command
@@ -15,10 +15,16 @@ import java.util.concurrent.ThreadLocalRandom
  */
 class TrainCommand : CommandExecutor {
     @Command(aliases = ["r.train"], description = "Trains your RuneBot player!")
-    fun onTrainCommand(user: User) {
+    fun onTrainCommand(user: User, args: Array<String>) {
+        if (args.size < 2) {
+            RuneBot.BOT.sendMessage("Incorrect usage! Use as: `r.train SKILL`")
+            return
+        }
         val exp = ThreadLocalRandom.current().nextLong(0, 50)
-        val player = Functions.fetchPlayer(user)
-        player.addCombatExp(exp)
+        val player = DatabaseFunctions.fetchPlayer(user)
+
+        TODO("Make args[1] correspond with experiences player array indices")
         RuneBot.BOT.sendMessage("You have earned $exp EXP! Total EXP: " + player.totalExp)
+
     }
 }

@@ -3,6 +3,7 @@ package com.gmail.arhamjsiddiqui.runebot
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
+import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import de.btobastian.sdcf4j.handler.JDA3Handler
 import net.dv8tion.jda.core.AccountType
@@ -54,6 +55,7 @@ object RuneBot {
 
         registerCommands {
             cmd.registerCommand(TrainCommand())
+            cmd.registerCommand(HelpCommand(cmd))
         }
 
         jda

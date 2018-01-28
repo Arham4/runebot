@@ -8,10 +8,10 @@ import org.jetbrains.exposed.sql.transactions.transaction
  *
  * @author Arham 4
  */
-object Functions {
+object DatabaseFunctions {
     fun fetchPlayer(user: User): Player {
-        return transaction {
-            var player = RuneBot.players[user]// first check if player is in our premade hashmap
+        var player = RuneBot.players[user]// first check if player is in our premade hashmap
+        return player ?: transaction {
             if (player == null) player = fetchPlayerByDatabase(user) // if it's not there, get it from the database.
             player ?: makePlayer(user) // else, make the player
         }
@@ -27,9 +27,15 @@ object Functions {
         val player = Player.new {
             username = user.name
             discordId = user.id
-        }.to(user)
-        RuneBot.players.put(player.second, player.first) // after making the player, we add them to the hashmap
-        RuneBot.BOT.sendMessage("Welcome to RuneBot! Your account has successfully been created!")
-        return player.first
+        }
+        RuneBot.players.put(user, player) // after making the player, we add them to the hashmap
+        RuneBot.BOT.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
+        return player
     }
+}
+fun IntArray.toByteArray(): ByteArray {
+    return foldIndexed(ByteArray(size)) { i, a, v -> a.apply { set(i, v.toByte()) } }
+}
+fun ByteArray.toIntArray(): IntArray {
+    return foldIndexed(IntArray(size)) { i, a, v -> a.apply { set(i, v) } }
 }
