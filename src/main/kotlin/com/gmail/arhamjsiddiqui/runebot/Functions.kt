@@ -36,6 +36,12 @@ object DatabaseFunctions {
 fun IntArray.toByteArray(): ByteArray {
     return foldIndexed(ByteArray(size)) { i, a, v -> a.apply { set(i, v.toByte()) } }
 }
+fun DoubleArray.toByteArray(): ByteArray {
+    return foldIndexed(ByteArray(size)) { i, a, v -> a.apply { set(i, v.toByte()) } }
+}
 fun ByteArray.toIntArray(): IntArray {
     return foldIndexed(IntArray(size)) { i, a, v -> a.apply { set(i, v) } }
+}
+fun ByteArray.toDoubleArray(): DoubleArray {
+    return foldIndexed(DoubleArray(size)) { i, a, v -> a.apply { set(i, v.toDouble()) } }
 }
