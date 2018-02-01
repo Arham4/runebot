@@ -1,8 +1,9 @@
 package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
+import main.kotlin.com.gmail.arhamjsiddiqui.runebot.player.Skills
 import org.jooq.SQLDialect
-import org.jooq.impl.DSL
+import org.jooq.util.postgres.PostgresDSL
 
 /**
  * Represents a single player in RuneBot
@@ -10,18 +11,19 @@ import org.jooq.impl.DSL
  * @author Arham 4
  */
 class Player(val discordId: String) {
-    var totalLevel: Int = 0
-    var totalExp: Int = 0
+    val skills: Skills = Skills()
     var exists = false
 
     init {
-        val playerSQL = DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES)
+        val playerSQL = PostgresDSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES)
                 .selectFrom(Players.PLAYERS)
                 .where(Players.PLAYERS.DISCORD_ID.eq(discordId))
                 .fetchAny()
         if (playerSQL != null) {
-            totalLevel = playerSQL.totalLevel
-            totalExp = playerSQL.totalExp
+            skills.totalLevel = playerSQL.totalLevel
+            skills.totalExp = playerSQL.totalExp
+            skills.levels = playerSQL.levels // stuck!!
+            skills.experiences = playerSQL.experiences
             exists = true
         }
     }
