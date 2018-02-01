@@ -4,12 +4,15 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
+import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import de.btobastian.sdcf4j.handler.JDA3Handler
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.entities.User
 import java.nio.file.FileSystems
 import java.nio.file.Files
+
 
 /**
  * @author Arham 4
@@ -20,6 +23,12 @@ object RuneBot {
     fun main(args: Array<String>) {
         BOT
     }
+
+    /**
+     * Contains all the players of RuneBot in a neat hashmap to make looking up faster.
+     * TODO save players periodically
+     */
+    val players = hashMapOf<User, Player>()
 
     val CONFIG: ConfigDto = let {
         val fileName = "config.yaml"
@@ -42,6 +51,7 @@ object RuneBot {
 
         registerCommands {
             cmd.registerCommand(HelpCommand(cmd))
+            cmd.registerCommand(TrainCommand())
         }
 
         jda
