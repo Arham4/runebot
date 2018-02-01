@@ -24,6 +24,7 @@ object DatabaseFunctions {
      */
     private fun fetchPlayerByDatabase(user: User): Player? {
         val player = Player(user.id)
+        if (player.exists) RuneBot.players.put(user, player)
         return if (player.exists) player else null
     }
 
@@ -33,7 +34,9 @@ object DatabaseFunctions {
                 .set(Players.PLAYERS.TOTAL_LEVEL, 0)
                 .set(Players.PLAYERS.TOTAL_EXP, 0)
                 .execute()
+        val player = Player(user.id)
+        RuneBot.players.put(user, player)
         RuneBot.BOT.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
-        return Player(user.id)
+        return player
     }
 }
