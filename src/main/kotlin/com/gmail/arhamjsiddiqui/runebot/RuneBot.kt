@@ -1,20 +1,15 @@
 package com.gmail.arhamjsiddiqui.runebot
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
+import main.kotlin.com.gmail.arhamjsiddiqui.runebot.YAMLParse
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.User
-import java.nio.file.FileSystems
-import java.nio.file.Files
-
 
 /**
  * @author Arham 4
@@ -31,13 +26,7 @@ object RuneBot {
      */
     val players = hashMapOf<User, Player>()
 
-    val CONFIG: ConfigDto = let {
-        val fileName = "config.yaml"
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.registerModule(KotlinModule())
-
-        Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
-    }
+    val CONFIG: ConfigDto = YAMLParse.parseDto("config.yaml", ConfigDto::class)
 
     val BOT: JDA = let {
         fun registerListeners(registrants: () -> Unit) {
