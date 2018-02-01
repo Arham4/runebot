@@ -15,13 +15,14 @@ class Player(val discordId: String) {
     var exists = false
 
     init {
-        val playerSQL = DSL.using(SQLDialect.POSTGRES)
-                .selectFrom(Players.PLAYERS)
+        val playerSQL = DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES)
+                .select(Players.PLAYERS.DISCORD_ID)
+                .from(Players.PLAYERS)
                 .where(Players.PLAYERS.DISCORD_ID.eq(discordId))
-                .fetchAny() // stuck!!
+                .fetchAny()
         if (playerSQL != null) {
-            totalLevel = playerSQL.getValue(Players.PLAYERS.TOTAL_LEVEL)
-            totalExp = playerSQL.getValue(Players.PLAYERS.TOTAL_EXP)
+            totalLevel = playerSQL.getValue(Players.PLAYERS.TOTAL_LEVEL, Int::class.java) // stuck!!
+            totalExp = playerSQL.getValue(Players.PLAYERS.TOTAL_EXP, Int::class.java)
             exists = true
         }
     }
