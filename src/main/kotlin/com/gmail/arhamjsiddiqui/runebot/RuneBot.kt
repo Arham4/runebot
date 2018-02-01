@@ -5,6 +5,8 @@ import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
@@ -21,7 +23,6 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        BOT
     }
 
     /**
@@ -57,7 +58,19 @@ object RuneBot {
         jda
     }
 
-    data class JDBCDto(val url: String, val driver: String, val user: String, val password: String)
+    val DATASOURCE = let {
+        val config = HikariConfig()
+
+        config.jdbcUrl = CONFIG.jdbc.url
+        config.username = CONFIG.jdbc.username
+        config.password = CONFIG.jdbc.password
+        config.isAutoCommit = true
+        config.maximumPoolSize = 32
+
+        HikariDataSource(config)
+    }
+
+    data class JDBCDto(val url: String, val driver: String, val username: String, val password: String)
     data class ConfigDto(val jdbc: JDBCDto, val token: String, val guildId: Long, val testChannelId: Long)
 }
 

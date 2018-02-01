@@ -28,11 +28,12 @@ object DatabaseFunctions {
     }
 
     private fun makePlayer(user: User): Player {
-        DSL.using(SQLDialect.POSTGRES).insertInto(Players.PLAYERS)
+        DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES).insertInto(Players.PLAYERS)
                 .set(Players.PLAYERS.DISCORD_ID, user.id)
                 .set(Players.PLAYERS.TOTAL_LEVEL, 0)
                 .set(Players.PLAYERS.TOTAL_EXP, 0)
                 .execute()
+        RuneBot.BOT.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
         return Player(user.id)
     }
 }

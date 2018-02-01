@@ -155,5 +155,10 @@
             <artifactId>sdcf4j-jda3</artifactId>
             <version>v1.0.9</version>
         </dependency>
+        <dependency>
+            <groupId>com.zaxxer</groupId>
+            <artifactId>HikariCP</artifactId>
+            <version>2.7.2</version>
+        </dependency>
     </dependencies>
 </project>
