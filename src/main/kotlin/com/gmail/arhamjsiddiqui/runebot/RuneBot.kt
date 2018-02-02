@@ -1,21 +1,17 @@
 package com.gmail.arhamjsiddiqui.runebot
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
-import com.fasterxml.jackson.module.kotlin.KotlinModule
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
+import com.gmail.arhamjsiddiqui.runebot.player.Player
+import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
+import com.zaxxer.hikari.HikariConfig
+import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
+import main.kotlin.com.gmail.arhamjsiddiqui.runebot.YAMLParse
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.User
-import org.jetbrains.exposed.sql.Database
-import org.jetbrains.exposed.sql.SchemaUtils.create
-import org.jetbrains.exposed.sql.StdOutSqlLogger
-import org.jetbrains.exposed.sql.transactions.transaction
-import java.nio.file.FileSystems
-import java.nio.file.Files
 
 /**
  * @author Arham 4
@@ -24,23 +20,22 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        Database.connect(CONFIG.jdbc.url, CONFIG.jdbc.driver, CONFIG.jdbc.user, CONFIG.jdbc.password)
-        transaction {
-            logger.addLogger(StdOutSqlLogger)
-            create(Players)
-        }
-        BOT
     }
 
-    val CONFIG: ConfigDto = let {
-        val fileName = "config.yaml"
-        val mapper = ObjectMapper(YAMLFactory())
-        mapper.registerModule(KotlinModule())
-
-        Files.newBufferedReader(FileSystems.getDefault().getPath(fileName)).use { mapper.readValue(it, ConfigDto::class.java) }
+    init {
+        /**
+         * Load experiences before program starts.
+         */
+        SkillsData.experienceForLevel
     }
 
+    /**
+     * Contains all the players of RuneBot in a neat hashmap to make looking up faster.
+     * TODO save players periodically
+     */
     val players = hashMapOf<User, Player>()
+
+    val CONFIG: ConfigDto = YAMLParse.parseDto("config.yaml", ConfigDto::class)
 
     val BOT: JDA = let {
         fun registerListeners(registrants: () -> Unit) {
@@ -54,14 +49,26 @@ object RuneBot {
         val cmd = JDA3Handler(jda)
 
         registerCommands {
-            cmd.registerCommand(TrainCommand())
             cmd.registerCommand(HelpCommand(cmd))
+            cmd.registerCommand(TrainCommand())
         }
 
         jda
     }
 
-    data class JDBCDto(val url: String, val driver: String, val user: String, val password: String)
+    val DATASOURCE = let {
+        val config = HikariConfig()
+
+        config.jdbcUrl = CONFIG.jdbc.url
+        config.username = CONFIG.jdbc.username
+        config.password = CONFIG.jdbc.password
+        config.isAutoCommit = true
+        config.maximumPoolSize = 32
+
+        HikariDataSource(config)
+    }
+
+    data class JDBCDto(val url: String, val driver: String, val username: String, val password: String)
     data class ConfigDto(val jdbc: JDBCDto, val token: String, val guildId: Long, val testChannelId: Long)
 }
 
