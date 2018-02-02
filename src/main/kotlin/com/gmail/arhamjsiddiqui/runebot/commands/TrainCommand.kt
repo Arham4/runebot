@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom
  */
 class TrainCommand : CommandExecutor {
 
-    @Command(aliases = ["r.train"], description = "Trains your RuneBot player!")
+    @Command(aliases = ["r.train SKILL", "r.train"], description = "Trains your RuneBot player!")
     fun onTrainCommand(user: User, args: Array<String>) {
         if (args.isEmpty()) {
             RuneBot.BOT.sendMessage("Incorrect usage! Use as: `r.train SKILL`")
@@ -29,9 +29,20 @@ class TrainCommand : CommandExecutor {
             SkillsData.skills.skillNameForNickname[input] ?: input
         }
         val skillId = SkillsData.skills.skillIdFor[skillName]
-        skillId?.let {
-            player.skills.addExperience(it, exp)
-            RuneBot.BOT.sendMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: " + player.skills.experiences[it])
+        if (skillId != null) {
+            player.skills.addExperience(skillId, exp)
+            RuneBot.BOT.sendMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
+                    + player.skills.experiences[skillId])
+        } else {
+            RuneBot.BOT.sendMessage("Invalid skill name! Only the following can be used:\n```" +
+                    "${SkillsData.skills.skillNameFor.toPresentableString()}```\nNicknames are available " +
+                    "(for example: `r.train attack` can be `r.train atk`).")
         }
+    }
+
+    private fun Map<Int, String>.toPresentableString(): String {
+        var output = ""
+        keys.forEach { output += "r.train ${this[it]}\n" }
+        return output
     }
 }
