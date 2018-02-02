@@ -7,7 +7,6 @@ import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
-import main.kotlin.com.gmail.arhamjsiddiqui.runebot.YAMLParse
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder

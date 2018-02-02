@@ -1,9 +1,9 @@
 package com.gmail.arhamjsiddiqui.runebot.player
 
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
+import com.gmail.arhamjsiddiqui.runebot.YAMLParse
 import com.gmail.arhamjsiddiqui.runebot.player.SkillsData.experienceForLevel
 import com.gmail.arhamjsiddiqui.runebot.sendMessage
-import main.kotlin.com.gmail.arhamjsiddiqui.runebot.YAMLParse
 
 /**
  * Represents the skills of a player

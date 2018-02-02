@@ -1,4 +1,4 @@
-package main.kotlin.com.gmail.arhamjsiddiqui.runebot
+package com.gmail.arhamjsiddiqui.runebot
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
