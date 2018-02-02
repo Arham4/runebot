@@ -2,6 +2,7 @@ package com.gmail.arhamjsiddiqui.runebot.player
 
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.YAMLParse
+import com.gmail.arhamjsiddiqui.runebot.asProperSubjectType
 import com.gmail.arhamjsiddiqui.runebot.player.SkillsData.experienceForLevel
 import com.gmail.arhamjsiddiqui.runebot.sendMessage
 
@@ -38,7 +39,7 @@ class Skills(val player: Player) {
         if (levels[skillId] != tempLevel) {
             val levelGain = Math.abs(levels[skillId] - tempLevel)
             RuneBot.BOT.sendMessage("Congratulations ${player.asDiscordUser.asMention}! You've leveled up $levelGain " +
-                    "levels in ${SkillsData.skills.skillNameFor[skillId]?.capitalize()}! You are now level ${levels[skillId]}.")
+                    "${"level".asProperSubjectType(levelGain)} in ${SkillsData.skills.skillNameFor[skillId]?.capitalize()}! You are now level ${levels[skillId]}.")
         }
     }
 

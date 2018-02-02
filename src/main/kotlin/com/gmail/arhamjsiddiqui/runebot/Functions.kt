@@ -13,6 +13,4 @@ object DatabaseFunctions {
         return RuneBot.players[user] ?: Player(user)
     }
 }
-
-
-
+fun String.asProperSubjectType(number: Int) = if (number == 1) this else "${this}s"
