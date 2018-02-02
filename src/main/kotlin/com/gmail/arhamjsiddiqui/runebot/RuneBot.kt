@@ -30,7 +30,6 @@ object RuneBot {
 
     /**
      * Contains all the players of RuneBot in a neat hashmap to make looking up faster.
-     * TODO save players periodically
      */
     val players = hashMapOf<User, Player>()
 

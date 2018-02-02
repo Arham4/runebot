@@ -24,6 +24,7 @@ class Skills(val player: Player) {
         experiences[skillId] += exp
         calculateLevel(skillId)
         totalExp += exp
+        saveStats()
     }
 
     private fun getLevelForExperience(experience: Int): Int {
@@ -38,6 +39,16 @@ class Skills(val player: Player) {
             val levelGain = Math.abs(levels[skillId] - tempLevel)
             RuneBot.BOT.sendMessage("Congratulations ${player.asDiscordUser.asMention}! You've leveled up $levelGain " +
                     "levels in ${SkillsData.skills.skillNameFor[skillId]?.capitalize()}! You are now level ${levels[skillId]}.")
+        }
+    }
+
+    private fun saveStats() {
+        player.sql { dsl, table ->
+            dsl.update(table).set(table.LEVELS, levels)
+                    .set(table.EXPERIENCES, experiences)
+                    .set(table.TOTAL_EXP, totalExp)
+                    .set(table.TOTAL_LEVEL, totalLevel)
+                    .execute()
         }
     }
 }
