@@ -1,5 +1,6 @@
 package main.kotlin.com.gmail.arhamjsiddiqui.runebot
 
+import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.fasterxml.jackson.dataformat.yaml.YAMLFactory
 import com.fasterxml.jackson.module.kotlin.KotlinModule
@@ -16,6 +17,7 @@ object YAMLParse {
     private val mapper = let {
         val mapper = ObjectMapper(YAMLFactory())
         mapper.registerModule(KotlinModule())
+        mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true)
         mapper
     }
 
