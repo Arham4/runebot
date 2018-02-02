@@ -2,6 +2,8 @@ package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
+import com.gmail.arhamjsiddiqui.runebot.player.Player
+import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
@@ -18,6 +20,13 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
+    }
+
+    init {
+        /**
+         * Load experiences before program starts.
+         */
+        SkillsData.experienceForLevel
     }
 
     /**

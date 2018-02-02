@@ -1,11 +1,16 @@
-package main.kotlin.com.gmail.arhamjsiddiqui.runebot.player
+package com.gmail.arhamjsiddiqui.runebot.player
+
+import com.gmail.arhamjsiddiqui.runebot.RuneBot
+import com.gmail.arhamjsiddiqui.runebot.player.SkillsData.experienceForLevel
+import com.gmail.arhamjsiddiqui.runebot.sendMessage
+import main.kotlin.com.gmail.arhamjsiddiqui.runebot.YAMLParse
 
 /**
  * Represents the skills of a player
  *
  * @author Arham 4
  */
-class Skills {
+class Skills(val player: Player) {
     var totalLevel: Int = 0
         internal set
     var totalExp: Int = 0
@@ -15,7 +20,7 @@ class Skills {
     var experiences: Array<Int> = arrayOf()
         internal set
 
-    operator fun set(skillId: Int, exp: Int) {
+    fun addExperience(skillId: Int, exp: Int) {
         experiences[skillId] += exp
         calculateLevel(skillId)
         totalExp += exp
@@ -29,18 +34,27 @@ class Skills {
     private fun calculateLevel(skillId: Int) {
         val tempLevel = levels[skillId]
         levels[skillId] = getLevelForExperience(experiences[skillId])
-        if (levels[skillId] != tempLevel) Math.abs(levels[skillId] - tempLevel)
+        if (levels[skillId] != tempLevel) {
+            val levelGain = Math.abs(levels[skillId] - tempLevel)
+            RuneBot.BOT.sendMessage("Congratulations ${player.asDiscordUser.asMention}! You've leveled up $levelGain " +
+                    "levels in ${SkillsData.skills.skillNameFor[skillId]?.capitalize()}! You are now level ${levels[skillId]}.")
+        }
     }
 }
 
-private val experienceForLevel by lazy {
-    val experienceForLevel: IntArray = intArrayOf()
-    var points = 0
-    var output = 0
-    for (level in 1..99) {
-        experienceForLevel[level] = output
-        points += Math.floor(level + 300 * Math.pow(2.0, level / 7.0)).toInt()
-        output = Math.floor((points / 4).toDouble()).toInt()
+object SkillsData {
+    data class SkillsDto(val skillNameFor: Map<Int, String>, val skillIdFor: Map<String, Int>, val skillNameForNickname: Map<String, String>)
+    val skills: SkillsDto = YAMLParse.parseDto("data/skills_data.yaml", SkillsDto::class)
+
+    val experienceForLevel: Array<Int> = let {
+        val experienceForLevel = Array(100, {0})
+        var points = 0
+        var output = 0
+        for (level in 1..99) {
+            experienceForLevel[level] = output
+            points += Math.floor(level + 300 * Math.pow(2.0, level / 7.0)).toInt()
+            output = Math.floor((points / 4).toDouble()).toInt()
+        }
+        experienceForLevel
     }
-    experienceForLevel
 }
