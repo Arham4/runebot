@@ -31,6 +31,7 @@ class TrainCommand : CommandExecutor {
         val skillId = SkillsData.skills.skillIdFor[skillName]
         if (skillId != null) {
             player.skills.addExperience(skillId, exp)
+            // todo add cooldown
             RuneBot.BOT.sendMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
                     + player.skills.experiences[skillId])
         } else {

@@ -5,6 +5,7 @@ import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
 import com.gmail.arhamjsiddiqui.runebot.sendMessage
 import net.dv8tion.jda.core.entities.User
+import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.SelectConditionStep
 import org.jooq.impl.DSL
@@ -17,17 +18,10 @@ import org.jooq.impl.DSL
 class Player(private val user: User) {
     val skills: Skills = Skills(this)
 
-    /**
-     * Allows us to use the player directly rather than always looking them up with their discord ID using DSL
-     */
-    val sql: SelectConditionStep<PlayersRecord>? by lazy {
-        DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES).selectFrom(Players.PLAYERS).where(Players.PLAYERS.DISCORD_ID.eq(user.id))
-    }
-
     val asDiscordUser = user
 
     init {
-        val playerSQL = sql?.fetchAny()
+        val playerSQL = selectPlayerSQL()?.fetchAny()
         if (playerSQL != null) {
             instantiateVariables(playerSQL)
         } else {
@@ -43,15 +37,31 @@ class Player(private val user: User) {
     }
 
     private fun makePlayer() {
-        DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES).insertInto(Players.PLAYERS)
-                .set(Players.PLAYERS.DISCORD_ID, user.id)
-                .set(Players.PLAYERS.TOTAL_LEVEL, 0)
-                .set(Players.PLAYERS.TOTAL_EXP, 0)
-                .set(Players.PLAYERS.LEVELS, Array(25, {0}))
-                .set(Players.PLAYERS.EXPERIENCES, Array(25, {0}))
-                .execute()
-        instantiateVariables(sql!!.fetchAny()) // !! because we just added them above, so there is no way it would be null.
+        sql { dsl, table ->
+            dsl.insertInto(table)
+                    .set(table.DISCORD_ID, user.id)
+                    .set(table.TOTAL_LEVEL, 0)
+                    .set(table.TOTAL_EXP, 0)
+                    .set(table.LEVELS, Array(25, {0}))
+                    .set(table.EXPERIENCES, Array(25, {0}))
+                    .execute()
+        }
+        instantiateVariables(selectPlayerSQL()!!.fetchAny())
         RuneBot.players.put(user, this)
         RuneBot.BOT.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
+    }
+
+    /**
+     * Used to provide an easy-to-use DSLContext and table reference to make typing less static.
+     */
+    fun <K> sql(query: (dsl: DSLContext, table: Players) -> K): K {
+        return query(DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES), Players.PLAYERS)
+    }
+
+    /**
+     * This function is nullable due to the fact that the player might not be found.
+     */
+    fun selectPlayerSQL(): SelectConditionStep<PlayersRecord>? {
+        return sql { dsl, table -> dsl.selectFrom(table).where(table.DISCORD_ID.eq(user.id)) }
     }
 }
