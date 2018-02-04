@@ -49,6 +49,7 @@ class Skills(val player: Player) {
                     .set(table.EXPERIENCES, experiences)
                     .set(table.TOTAL_EXP, totalExp)
                     .set(table.TOTAL_LEVEL, totalLevel)
+                    .where(table.DISCORD_ID.eq(player.asDiscordUser.id))
                     .execute()
         }
     }
