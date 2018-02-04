@@ -30,6 +30,7 @@ class Player(private val user: User) {
         } else {
             makePlayer()
         }
+        RuneBot.players.put(user, this)
     }
 
     private fun instantiateVariables(playerSQL: PlayersRecord) {
@@ -50,7 +51,6 @@ class Player(private val user: User) {
                     .execute()
         }
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
-        RuneBot.players.put(user, this)
         textChannel?.queueMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
     }
 
