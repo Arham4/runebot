@@ -2,8 +2,9 @@ package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
-import com.gmail.arhamjsiddiqui.runebot.player.Player
-import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
+import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.entity.Player
 import com.zaxxer.hikari.HikariConfig
 import com.zaxxer.hikari.HikariDataSource
 import de.btobastian.sdcf4j.handler.JDA3Handler
@@ -33,7 +34,7 @@ object RuneBot {
      */
     val players = hashMapOf<User, Player>()
 
-    val CONFIG: ConfigDto = YAMLParse.parseDto("config.yaml", ConfigDto::class)
+
 
     val BOT: JDA = let {
         fun registerListeners(registrants: () -> Unit) {
@@ -66,8 +67,4 @@ object RuneBot {
 
         HikariDataSource(config)
     }
-
-    data class JDBCDto(val url: String, val driver: String, val username: String, val password: String)
-    data class DiscordDto(val token: String)
-    data class ConfigDto(val messageCooldown: Int, val jdbc: JDBCDto, val discord: DiscordDto)
 }

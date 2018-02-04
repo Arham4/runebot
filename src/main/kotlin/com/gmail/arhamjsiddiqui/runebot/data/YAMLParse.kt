@@ -1,4 +1,4 @@
-package com.gmail.arhamjsiddiqui.runebot
+package com.gmail.arhamjsiddiqui.runebot.data
 
 import com.fasterxml.jackson.core.JsonParser
 import com.fasterxml.jackson.databind.ObjectMapper

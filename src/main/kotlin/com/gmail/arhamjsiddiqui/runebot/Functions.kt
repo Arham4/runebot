@@ -1,6 +1,7 @@
 package com.gmail.arhamjsiddiqui.runebot
 
-import com.gmail.arhamjsiddiqui.runebot.player.Player
+import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
+import com.gmail.arhamjsiddiqui.runebot.entity.Player
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 
@@ -17,7 +18,7 @@ object DatabaseFunctions {
 object CommandFunctions {
     inline fun withPlayer(user: User, textChannel: TextChannel, crossinline command: (player: Player) -> Unit) {
         val player = DatabaseFunctions.fetchPlayer(user)
-        if (!player.cooldown.secondsPast(RuneBot.CONFIG.messageCooldown)) return
+        if (!player.cooldown.secondsPast(CONFIG.messageCooldown)) return
         player.textChannel = textChannel
         command.invoke(player)
         player.cooldown = System.currentTimeMillis()

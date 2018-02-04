@@ -9,7 +9,7 @@
     <version>1.0-SNAPSHOT</version>
 
     <properties>
-        <kotlin.version>1.2.20</kotlin.version>
+        <kotlin.version>1.2.10</kotlin.version>
     </properties>
 
     <repositories>
@@ -89,7 +89,6 @@
                         <database>
                             <name>org.jooq.util.postgres.PostgresDatabase</name>
                             <includes>.*</includes>
-                            <excludes></excludes>
                             <inputSchema>public</inputSchema>
                         </database>
                         <target>
@@ -98,6 +97,26 @@
                         </target>
                     </generator>
                 </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>compile</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>testCompile</id>
+                        <phase>test-compile</phase>
+                        <goals>
+                            <goal>testCompile</goal>
+                        </goals>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
@@ -163,6 +182,11 @@
             <groupId>com.zaxxer</groupId>
             <artifactId>HikariCP</artifactId>
             <version>2.7.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.michaelbull</groupId>
+            <artifactId>rs-api</artifactId>
+            <version>2.2</version>
         </dependency>
     </dependencies>
 </project>

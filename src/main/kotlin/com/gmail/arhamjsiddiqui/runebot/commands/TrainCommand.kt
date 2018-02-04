@@ -1,7 +1,7 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
 import com.gmail.arhamjsiddiqui.runebot.CommandFunctions.withPlayer
-import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.queueMessage
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
