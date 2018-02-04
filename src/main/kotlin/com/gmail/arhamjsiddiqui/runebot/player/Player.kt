@@ -21,6 +21,7 @@ class Player(private val user: User) {
 
     val asDiscordUser = user
     var textChannel: TextChannel? = null
+    var cooldown: Long = 0
 
     init {
         val playerSQL = selectPlayerSQL()?.fetchAny()

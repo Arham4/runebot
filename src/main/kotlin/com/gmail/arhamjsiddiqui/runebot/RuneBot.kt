@@ -43,9 +43,10 @@ object RuneBot {
             registrants.invoke()
         }
 
-        val jda = JDABuilder(AccountType.BOT).setToken(CONFIG.token).buildAsync()
+        val jda = JDABuilder(AccountType.BOT).setToken(CONFIG.discord.token).buildAsync()
         val cmd = JDA3Handler(jda)
 
+        registerListeners {  }
         registerCommands {
             cmd.registerCommand(HelpCommand(cmd))
             cmd.registerCommand(TrainCommand())
@@ -67,5 +68,6 @@ object RuneBot {
     }
 
     data class JDBCDto(val url: String, val driver: String, val username: String, val password: String)
-    data class ConfigDto(val jdbc: JDBCDto, val token: String)
+    data class DiscordDto(val token: String)
+    data class ConfigDto(val messageCooldown: Int, val jdbc: JDBCDto, val discord: DiscordDto)
 }
