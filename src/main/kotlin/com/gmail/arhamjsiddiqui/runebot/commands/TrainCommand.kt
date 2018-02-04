@@ -2,6 +2,7 @@ package com.gmail.arhamjsiddiqui.runebot.commands
 
 import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
 import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.queueMessage
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
 import net.dv8tion.jda.core.entities.TextChannel
@@ -18,7 +19,7 @@ class TrainCommand : CommandExecutor {
     @Command(aliases = ["r.train SKILL", "r.train"], description = "Trains your RuneBot player!")
     fun onTrainCommand(textChannel: TextChannel, user: User, args: Array<String>) {
         if (args.isEmpty()) {
-            textChannel.sendMessage("Incorrect usage! Use as: `r.train SKILL`").queue()
+            textChannel.queueMessage("Incorrect usage! Use as: `r.train SKILL`")
             return
         }
         val exp = ThreadLocalRandom.current().nextInt(0, 50)
@@ -32,12 +33,12 @@ class TrainCommand : CommandExecutor {
         if (skillId != null) {
             player.skills.addExperience(skillId, exp)
             // todo add cooldown
-            textChannel.sendMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
-                    + player.skills.experiences[skillId]).queue()
+            textChannel.queueMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
+                    + player.skills.experiences[skillId])
         } else {
-            textChannel.sendMessage("Invalid skill name! Only the following can be used:\n```" +
+            textChannel.queueMessage("Invalid skill name! Only the following can be used:\n```" +
                     "${SkillsData.skills.skillNameFor.toPresentableString()}```\nNicknames are available " +
-                    "(for example: `r.train attack` can be `r.train atk`).").queue()
+                    "(for example: `r.train attack` can be `r.train atk`).")
         }
     }
 
