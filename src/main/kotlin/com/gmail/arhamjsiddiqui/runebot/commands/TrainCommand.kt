@@ -1,6 +1,6 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
-import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
+import com.gmail.arhamjsiddiqui.runebot.CommandFunctions.withPlayer
 import com.gmail.arhamjsiddiqui.runebot.player.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.queueMessage
 import de.btobastian.sdcf4j.Command
@@ -23,22 +23,22 @@ class TrainCommand : CommandExecutor {
             return
         }
         val exp = ThreadLocalRandom.current().nextInt(0, 50)
-        val player = DatabaseFunctions.fetchPlayer(user)
-        player.textChannel = textChannel
-        val skillName = let {
-            val input = args[0].toLowerCase()
-            SkillsData.skills.skillNameForNickname[input] ?: input
-        }
-        val skillId = SkillsData.skills.skillIdFor[skillName]
-        if (skillId != null) {
-            player.skills.addExperience(skillId, exp)
-            // todo add cooldown
-            textChannel.queueMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
-                    + player.skills.experiences[skillId])
-        } else {
-            textChannel.queueMessage("Invalid skill name! Only the following can be used:\n```" +
-                    "${SkillsData.skills.skillNameFor.toPresentableString()}```\nNicknames are available " +
-                    "(for example: `r.train attack` can be `r.train atk`).")
+        withPlayer(user, textChannel) { player ->
+            val skillName = let {
+                val input = args[0].toLowerCase()
+                SkillsData.skills.skillNameForNickname[input] ?: input
+            }
+            val skillId = SkillsData.skills.skillIdFor[skillName]
+            if (skillId != null) {
+                player.skills.addExperience(skillId, exp)
+                // todo add cooldown
+                textChannel.queueMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
+                        + player.skills.experiences[skillId])
+            } else {
+                textChannel.queueMessage("Invalid skill name! Only the following can be used:\n```" +
+                        "${SkillsData.skills.skillNameFor.toPresentableString()}```\nNicknames are available " +
+                        "(for example: `r.train attack` can be `r.train atk`).")
+            }
         }
     }
 
