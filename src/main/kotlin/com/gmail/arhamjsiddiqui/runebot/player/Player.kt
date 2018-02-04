@@ -3,7 +3,7 @@ package com.gmail.arhamjsiddiqui.runebot.player
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
-import com.gmail.arhamjsiddiqui.runebot.sendMessage
+import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
@@ -19,6 +19,7 @@ class Player(private val user: User) {
     val skills: Skills = Skills(this)
 
     val asDiscordUser = user
+    var textChannel: TextChannel? = null
 
     init {
         val playerSQL = selectPlayerSQL()?.fetchAny()
@@ -48,7 +49,7 @@ class Player(private val user: User) {
         }
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
         RuneBot.players.put(user, this)
-        RuneBot.BOT.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
+        textChannel?.sendMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")//?.queue()
     }
 
     /**

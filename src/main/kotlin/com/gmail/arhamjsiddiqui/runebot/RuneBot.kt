@@ -67,9 +67,5 @@ object RuneBot {
     }
 
     data class JDBCDto(val url: String, val driver: String, val username: String, val password: String)
-    data class ConfigDto(val jdbc: JDBCDto, val token: String, val guildId: Long, val testChannelId: Long)
-}
-
-fun JDA.sendMessage(message: String) {
-    getGuildById(RuneBot.CONFIG.guildId).getTextChannelById(RuneBot.CONFIG.testChannelId).sendMessage(message).queue()
+    data class ConfigDto(val jdbc: JDBCDto, val token: String)
 }
