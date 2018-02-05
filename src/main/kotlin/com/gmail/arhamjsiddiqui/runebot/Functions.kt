@@ -2,8 +2,11 @@ package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
 import com.gmail.arhamjsiddiqui.runebot.entity.Player
+import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
+import java.awt.Color
+
 
 /**
  * A random assortment of functions (include extension functions here too)
@@ -27,4 +30,17 @@ object CommandFunctions {
 }
 
 fun String.asProperSubjectType(number: Int, plural: String = "${this}s") = if (number == 1) this else plural
+val String.withIndefinitePronoun: String
+    get() {
+        val firstLetter = first().toString()
+        return if (firstLetter.matches(Regex("[aeiou]"))) "an $this" else "a $this"
+    }
 fun TextChannel.queueMessage(message: String) = sendMessage(message).queue()
+fun TextChannel.sendEmbedMessage(title: String, color: Color = Color(0x3b5262), message: String, image: String? = null) {
+    val eb = EmbedBuilder()
+    eb.setTitle(title, null)
+    eb.setColor(color)
+    eb.setDescription(message)
+    eb.setThumbnail(image)
+    sendMessage(eb.build()).queue()
+}

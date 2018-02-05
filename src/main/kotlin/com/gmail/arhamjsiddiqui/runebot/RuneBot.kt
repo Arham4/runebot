@@ -34,8 +34,6 @@ object RuneBot {
      */
     val players = hashMapOf<User, Player>()
 
-
-
     val BOT: JDA = let {
         fun registerListeners(registrants: () -> Unit) {
             registrants.invoke()

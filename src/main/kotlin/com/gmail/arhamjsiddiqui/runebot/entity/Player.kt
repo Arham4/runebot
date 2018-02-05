@@ -1,17 +1,18 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
-import com.gmail.arhamjsiddiqui.runebot.asProperSubjectType
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
 import com.gmail.arhamjsiddiqui.runebot.queueMessage
+import com.gmail.arhamjsiddiqui.runebot.sendEmbedMessage
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import org.jooq.DSLContext
 import org.jooq.SQLDialect
 import org.jooq.SelectConditionStep
 import org.jooq.impl.DSL
+import java.awt.Color
 
 /**
  * Represents a single player in RuneBot
@@ -20,6 +21,7 @@ import org.jooq.impl.DSL
  */
 class Player(private val user: User) {
     val skills: Skills = Skills(this)
+    val items: ArrayList<Item> = arrayListOf()
 
     val asDiscordUser = user
     var textChannel: TextChannel? = null
@@ -40,6 +42,10 @@ class Player(private val user: User) {
         skills.totalExp = playerSQL.totalExp
         skills.levels = playerSQL.levels
         skills.experiences = playerSQL.experiences
+        playerSQL.itemIds?.forEachIndexed { index, itemId ->
+            val item = Item(itemId, playerSQL.itemCounts[index])
+            items.add(item)
+        }
     }
 
     private fun makePlayer() {
@@ -50,6 +56,8 @@ class Player(private val user: User) {
                     .set(table.TOTAL_EXP, 0)
                     .set(table.LEVELS, Array(25, {0}))
                     .set(table.EXPERIENCES, Array(25, {0}))
+                    .set(table.ITEM_IDS, Array(0, {0}))
+                    .set(table.ITEM_COUNTS, Array(0, {0}))
                     .execute()
         }
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
@@ -102,11 +110,10 @@ class Skills(val player: Player) {
         val tempLevel = levels[skillId]
         levels[skillId] = getLevelForExperience(experiences[skillId])
         if (levels[skillId] != tempLevel) {
-            val levelGain = Math.abs(levels[skillId] - tempLevel)
-            player.textChannel?.queueMessage("Congratulations ${player.asDiscordUser.asMention}! You've " +
-                    "leveled up $levelGain ${"level".asProperSubjectType(levelGain)} in " +
-                    "${SkillsData.skills.skillNameFor[skillId]?.capitalize()}! You are now " +
-                    "level ${levels[skillId]}.")
+            player.textChannel?.sendEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
+                    "Congratulations ${player.asDiscordUser.asMention}! You are now " +
+                            "level ${levels[skillId]} in ${SkillsData.skills.skillNameFor[skillId]}.",
+                    SkillsData.imageIconFor(skillId))
         }
     }
 

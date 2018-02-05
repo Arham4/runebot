@@ -15,4 +15,8 @@ object SkillsData {
         }
         experienceForLevel
     }
+
+    fun imageIconFor(skillId: Int): String {
+        return "https://www.tip.it/runescape/images/misc/skill_${skills.skillNameFor[skillId]?.toLowerCase()}_logo.png"
+    }
 }
