@@ -56,7 +56,7 @@ skillNameForNickname:
   atk: attack
   str: strength
   def: defence
-  rng: range
+  rng: ranged
   hp: hitpoints
   mage: magic
   pray: prayer
