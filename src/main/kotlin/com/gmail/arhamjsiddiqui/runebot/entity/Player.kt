@@ -19,12 +19,11 @@ import java.awt.Color
  *
  * @author Arham 4
  */
-class Player(private val user: User) {
+class Player(private val user: User, var textChannel: TextChannel? = null) {
     val skills: Skills = Skills(this)
     val items: ArrayList<Item> = arrayListOf()
 
     val asDiscordUser = user
-    var textChannel: TextChannel? = null
     var cooldown: Long = 0
 
     init {
@@ -60,6 +59,7 @@ class Player(private val user: User) {
                     .set(table.ITEM_COUNTS, Array(0, {0}))
                     .execute()
         }
+        skills.addExperience(3, 1154)
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
         textChannel?.queueMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
     }
@@ -96,7 +96,7 @@ class Skills(val player: Player) {
 
     fun addExperience(skillId: Int, exp: Int) {
         experiences[skillId] += exp
-        calculateLevel(skillId)
+        calculateLevel(skillId, exp)
         totalExp += exp
         saveStats()
     }
@@ -106,14 +106,19 @@ class Skills(val player: Player) {
         return (1..98).firstOrNull { experience < SkillsData.experienceForLevel[it + 1] } ?: 99
     }
 
-    private fun calculateLevel(skillId: Int) {
+    private fun calculateLevel(skillId: Int, exp: Int) {
         val tempLevel = levels[skillId]
         levels[skillId] = getLevelForExperience(experiences[skillId])
+        if (0.rangeTo(2).contains(skillId) || skillId == 4 || skillId == 6) {
+            addExperience(3, exp / 3)
+        }
         if (levels[skillId] != tempLevel) {
-            player.textChannel?.sendEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
-                    "Congratulations ${player.asDiscordUser.asMention}! You are now " +
-                            "level ${levels[skillId]} in ${SkillsData.skills.skillNameFor[skillId]}.",
-                    SkillsData.imageIconFor(skillId))
+            if (levels[skillId] != 1) {
+                player.textChannel?.sendEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
+                        "Congratulations ${player.asDiscordUser.asMention}! You are now " +
+                                "level ${levels[skillId]} in ${SkillsData.skills.skillNameFor[skillId]}.",
+                        SkillsData.imageIconFor(skillId))
+            }
         }
     }
 
