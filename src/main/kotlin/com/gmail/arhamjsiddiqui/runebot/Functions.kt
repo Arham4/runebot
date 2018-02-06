@@ -14,15 +14,16 @@ import java.awt.Color
  * @author Arham 4
  */
 object DatabaseFunctions {
-    fun fetchPlayer(user: User): Player {
-        return RuneBot.players[user] ?: Player(user)
+    fun fetchPlayer(user: User, textChannel: TextChannel? = null): Player {
+        val player = RuneBot.players[user]
+        player?.textChannel = textChannel
+        return player ?: Player(user, textChannel)
     }
 }
 object CommandFunctions {
     inline fun withPlayer(user: User, textChannel: TextChannel, crossinline command: (player: Player) -> Unit) {
-        val player = DatabaseFunctions.fetchPlayer(user)
+        val player = DatabaseFunctions.fetchPlayer(user, textChannel)
         if (!player.cooldown.secondsPast(CONFIG.messageCooldown)) return
-        player.textChannel = textChannel
         command.invoke(player)
         player.cooldown = System.currentTimeMillis()
     }
