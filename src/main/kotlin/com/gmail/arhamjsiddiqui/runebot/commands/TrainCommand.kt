@@ -1,8 +1,8 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
 import com.gmail.arhamjsiddiqui.runebot.CommandFunctions.withPlayer
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
-import com.gmail.arhamjsiddiqui.runebot.queueMessage
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
 import net.dv8tion.jda.core.entities.TextChannel
