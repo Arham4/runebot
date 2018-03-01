@@ -1,11 +1,11 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
-import com.gmail.arhamjsiddiqui.runebot.queueMessage
-import com.gmail.arhamjsiddiqui.runebot.sendEmbedMessage
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import org.jooq.DSLContext
@@ -114,7 +114,7 @@ class Skills(val player: Player) {
         }
         if (levels[skillId] != tempLevel) {
             if (levels[skillId] != 1) {
-                player.textChannel?.sendEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
+                player.textChannel?.queueSimpleEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
                         "Congratulations ${player.asDiscordUser.asMention}! You are now " +
                                 "level ${levels[skillId]} in ${SkillsData.skills.skillNameFor[skillId]}.",
                         SkillsData.imageIconFor(skillId))
