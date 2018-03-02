@@ -22,7 +22,7 @@ class TrainCommand : CommandExecutor {
             textChannel.queueMessage("Incorrect usage! Use as: `r.train SKILL`")
             return
         }
-        val exp = ThreadLocalRandom.current().nextInt(0, 50)
+        val exp = ThreadLocalRandom.current().nextInt(1, 50)
         withPlayer(user, textChannel) { player ->
             val skillName = let {
                 val input = args[0].toLowerCase()
@@ -30,7 +30,7 @@ class TrainCommand : CommandExecutor {
             }
             val skillId = SkillsData.skills.skillIdFor[skillName]
             if (skillId != null) {
-                player.skills.addExperience(skillId, exp)
+                player.train(skillId, exp)
                 textChannel.queueMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
                         + player.skills.experiences[skillId])
             } else {

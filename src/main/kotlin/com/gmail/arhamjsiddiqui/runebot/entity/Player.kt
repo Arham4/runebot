@@ -1,9 +1,12 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.MarkdownText.bold
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
+import com.gmail.arhamjsiddiqui.runebot.ItemFunctions
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.ifPercentage
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
 import net.dv8tion.jda.core.entities.TextChannel
@@ -62,6 +65,34 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
         skills.addExperience(3, 1154)
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
         textChannel?.queueMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
+    }
+
+    fun train(skillId: Int, exp: Int) {
+        skills.addExperience(skillId, exp)
+        ifPercentage(10) {
+            println("percentage!!")
+            val item = ItemFunctions.generateRandomItem()
+            val message = let {
+                val baseMessage = "You've received a ${item.definition.name}!"
+                when(item.rarity) {
+                    Rarity.UNCOMMON -> "$baseMessage Uncommon item!"
+                    Rarity.RARE -> "$baseMessage ${"Rare item!".bold()}"
+                    else -> baseMessage
+                }
+            }
+            textChannel?.queueSimpleEmbedMessage("Congratulations! New item!", item.rarity.color, message, item.imageLink)
+            items += item
+        }
+    }
+
+    private operator fun ArrayList<Item>.plusAssign(item: Item) {
+        if (contains(item)) {
+            val actualItem = items[items.indexOf(item)]
+            actualItem.count += item.count
+        } else {
+            add(item)
+        }
+        ItemFunctions.saveItems(this@Player)
     }
 
     /**

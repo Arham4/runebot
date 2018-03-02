@@ -1,6 +1,7 @@
 package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
+import com.gmail.arhamjsiddiqui.runebot.commands.ItemsCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
@@ -49,6 +50,7 @@ object RuneBot {
         registerCommands {
             cmd.registerCommand(HelpCommand(cmd))
             cmd.registerCommand(TrainCommand())
+            cmd.registerCommand(ItemsCommand())
         }
 
         jda
