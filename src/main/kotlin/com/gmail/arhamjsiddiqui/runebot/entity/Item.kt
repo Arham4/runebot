@@ -6,7 +6,7 @@ import java.awt.Color
 import java.util.*
 
 /**
- * Represents items that can be aquired.
+ * Represents items that can be acquired.
  *
  * @author Arham 4
  */

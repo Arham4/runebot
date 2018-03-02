@@ -12,6 +12,7 @@ import de.btobastian.sdcf4j.handler.JDA3Handler
 import net.dv8tion.jda.core.AccountType
 import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
+import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
 
 /**
@@ -52,6 +53,8 @@ object RuneBot {
             cmd.registerCommand(TrainCommand())
             cmd.registerCommand(ItemsCommand())
         }
+
+        jda.presence.game = Game.playing("r.help")
 
         jda
     }
