@@ -70,7 +70,6 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
     fun train(skillId: Int, exp: Int) {
         skills.addExperience(skillId, exp)
         ifPercentage(10) {
-            println("percentage!!")
             val item = ItemFunctions.generateRandomItem()
             val message = let {
                 val baseMessage = "You've received a ${item.definition.name}!"

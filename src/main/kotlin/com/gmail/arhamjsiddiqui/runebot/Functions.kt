@@ -1,5 +1,6 @@
 package com.gmail.arhamjsiddiqui.runebot
 
+import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
 import com.gmail.arhamjsiddiqui.runebot.entity.Item
 import com.gmail.arhamjsiddiqui.runebot.entity.Player
 import com.gmail.arhamjsiddiqui.runebot.entity.Rarity
@@ -26,7 +27,7 @@ object DatabaseFunctions {
 object CommandFunctions {
     inline fun withPlayer(user: User, textChannel: TextChannel, crossinline command: (player: Player) -> Unit) {
         val player = DatabaseFunctions.fetchPlayer(user, textChannel)
-        //if (!player.cooldown.secondsPast(CONFIG.messageCooldown)) return
+        if (!player.cooldown.secondsPast(CONFIG.messageCooldown)) return
         command.invoke(player)
         player.cooldown = System.currentTimeMillis()
     }
