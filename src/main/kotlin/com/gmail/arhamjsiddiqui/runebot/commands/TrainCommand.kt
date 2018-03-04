@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom
  */
 class TrainCommand : CommandExecutor {
 
-    @Command(aliases = ["r.train SKILL", "r.train"], description = "Trains your RuneBot player!")
+    @Command(aliases = ["r.train"], usage = "r.train SKILL", description = "Trains your RuneBot player!")
     fun onTrainCommand(textChannel: TextChannel, user: User, args: Array<String>) {
         if (args.isEmpty()) {
             textChannel.queueMessage("Incorrect usage! Use as: `r.train SKILL`")
