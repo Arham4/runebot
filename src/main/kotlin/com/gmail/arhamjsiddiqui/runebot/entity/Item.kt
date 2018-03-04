@@ -11,7 +11,7 @@ import java.util.*
  * @author Arham 4
  */
 data class Item(val id: Int, var count: Int = 1, val rarity: Rarity = Rarity.COMMON) {
-    val definition = GRAND_EXCHANGE_API.itemPriceInformation(id).get().item
+    val definition by lazy { GRAND_EXCHANGE_API.itemPriceInformation(id).get().item }
     val name by lazy { definition.name }
     val imageLink = "https://www.runelocus.com/items/img/$id.png"
 }
