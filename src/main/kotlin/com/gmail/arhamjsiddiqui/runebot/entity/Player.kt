@@ -62,8 +62,8 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
                     .set(table.ITEM_COUNTS, Array(0, {0}))
                     .execute()
         }
-        skills.addExperience(3, 1154)
         instantiateVariables(selectPlayerSQL()!!.fetchAny())
+        skills.addExperience(3, 1154)
         textChannel?.queueMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
     }
 
