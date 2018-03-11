@@ -14,6 +14,15 @@ data class Item(val id: Int, var count: Int = 1, val rarity: Rarity = Rarity.COM
     val definition by lazy { GRAND_EXCHANGE_API.itemPriceInformation(id).get().item }
     val name by lazy { definition.name }
     val imageLink = "https://www.runelocus.com/items/img/$id.png"
+
+    override fun equals(other: Any?): Boolean {
+        if (other is Item) return other.id == id
+        return false
+    }
+
+    override fun hashCode(): Int {
+        return id
+    }
 }
 
 enum class Rarity(val color: Color) {
