@@ -1,9 +1,11 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
 import com.gmail.arhamjsiddiqui.runebot.data.YAMLParse
+import com.gmail.arhamjsiddiqui.runebot.randomItem
 import com.mikebull94.rsapi.RuneScapeAPI
 import java.awt.Color
 import java.util.*
+import java.util.concurrent.ThreadLocalRandom
 
 /**
  * Represents items that can be acquired.
@@ -48,6 +50,26 @@ data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, 
         result = 31 * result + Arrays.hashCode(uncommonItems)
         result = 31 * result + Arrays.hashCode(rareItems)
         return result
+    }
+}
+
+object ItemFunctions {
+    fun generateRandomItem(): Item {
+        val randomNumber = ThreadLocalRandom.current().nextInt(1, 101)
+        return when (randomNumber) {
+            in 1..50 -> Item(items.commonItems.randomItem(), rarity = Rarity.COMMON)
+            in 51..80 -> Item(items.uncommonItems.randomItem(), rarity = Rarity.UNCOMMON)
+            else -> Item(items.rareItems.randomItem(), rarity = Rarity.RARE)
+        }
+    }
+
+    fun saveItems(player: Player) {
+        player.sql { dsl, table ->
+            dsl.update(table).set(table.ITEM_IDS, player.items.map { it.id }.toTypedArray())
+                    .set(table.ITEM_COUNTS, player.items.map{ it.count }.toTypedArray())
+                    .where(table.DISCORD_ID.eq(player.asDiscordUser.id))
+                    .execute()
+        }
     }
 }
 

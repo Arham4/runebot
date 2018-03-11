@@ -1,10 +1,10 @@
 package com.gmail.arhamjsiddiqui.runebot
 
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.MarkdownText.bold
 import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
 import com.gmail.arhamjsiddiqui.runebot.entity.Item
 import com.gmail.arhamjsiddiqui.runebot.entity.Player
 import com.gmail.arhamjsiddiqui.runebot.entity.Rarity
-import com.gmail.arhamjsiddiqui.runebot.entity.items
 import net.dv8tion.jda.core.EmbedBuilder
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
@@ -57,6 +57,18 @@ object DiscordFunctions {
         sendMessage(eb.build()).queue()
     }
 
+    fun TextChannel.queueItemMessage(item: Item) {
+        val message = let {
+            val baseMessage = "You've received ${item.definition.name}!"
+            when(item.rarity) {
+                Rarity.UNCOMMON -> "$baseMessage Uncommon item!"
+                Rarity.RARE -> "$baseMessage ${"Rare item!".bold()}"
+                else -> baseMessage
+            }
+        }
+        queueSimpleEmbedMessage("Congratulations! New item!", item.rarity.color, message, item.imageLink)
+    }
+
     object MarkdownText {
         fun String.italics() = "*$this*"
         fun String.bold() = "**$this**"
@@ -72,32 +84,7 @@ object DiscordFunctions {
     }
 }
 
-object ItemFunctions {
-    fun generateRandomItem(): Item {
-        val randomNumber = ThreadLocalRandom.current().nextInt(1, 101)
-        return when (randomNumber) {
-            in 1..50 -> Item(items.commonItems.randomItem(), rarity = Rarity.COMMON)
-            in 51..80 -> Item(items.uncommonItems.randomItem(), rarity = Rarity.UNCOMMON)
-            else -> Item(items.rareItems.randomItem(), rarity = Rarity.RARE)
-        }
-    }
-
-    fun saveItems(player: Player) {
-        player.sql { dsl, table ->
-            dsl.update(table).set(table.ITEM_IDS, player.items.map { it.id }.toTypedArray())
-                    .set(table.ITEM_COUNTS, player.items.map{ it.count }.toTypedArray())
-                    .where(table.DISCORD_ID.eq(player.asDiscordUser.id))
-                    .execute()
-        }
-    }
-}
-
 fun String.asProperSubjectType(number: Int, plural: String = "${this}s") = if (number == 1) this else plural
-val String.withIndefinitePronoun: String
-    get() {
-        val firstLetter = first().toString()
-        return if (firstLetter.matches(Regex("[aeiou]"))) "an $this" else "a $this"
-    }
 fun <T> Array<T>.randomItem(): T {
     return this[ThreadLocalRandom.current().nextInt(size)]
 }

@@ -1,9 +1,8 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
-import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.MarkdownText.bold
+import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueItemMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
-import com.gmail.arhamjsiddiqui.runebot.ItemFunctions
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.ifPercentage
@@ -71,31 +70,30 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
         skills.addExperience(skillId, exp)
         ifPercentage(10) {
             val item = ItemFunctions.generateRandomItem()
-            val message = let {
-                val baseMessage = "You've received a ${item.definition.name}!"
-                when(item.rarity) {
-                    Rarity.UNCOMMON -> "$baseMessage Uncommon item!"
-                    Rarity.RARE -> "$baseMessage ${"Rare item!".bold()}"
-                    else -> baseMessage
-                }
-            }
-            textChannel?.queueSimpleEmbedMessage("Congratulations! New item!", item.rarity.color, message, item.imageLink)
-            items += item
+            addItem(item)
+            textChannel?.queueItemMessage(item)
         }
     }
 
-    private operator fun ArrayList<Item>.plusAssign(item: Item) {
-        if (contains(item)) {
+    /**
+     * It is suggested to use this addItem function as opposed to accessing items, since this will save items and also
+     * check for duplicates.
+     */
+    fun addItem(item: Item) {
+        if (items.contains(item)) {
             val actualItem = items[items.indexOf(item)]
             actualItem.count += item.count
         } else {
-            add(item)
+            items.add(item)
         }
         ItemFunctions.saveItems(this@Player)
     }
 
-    private operator fun ArrayList<Item>.minusAssign(item: Item) {
-        remove(item)
+    /**
+     * It is suggested to use this addItem function as opposed to accessing items, since this will save items.
+     */
+    fun removeItem(item: Item) {
+        items.remove(item)
         ItemFunctions.saveItems(this@Player)
     }
 
