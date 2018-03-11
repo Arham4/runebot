@@ -23,6 +23,10 @@ object DatabaseFunctions {
         player?.textChannel = textChannel
         return player ?: Player(user, textChannel)
     }
+
+    fun accountExists(user: User): Boolean {
+        return Player.selectPlayerSQL(user)?.fetchAny() != null
+    }
 }
 object CommandFunctions {
     inline fun withPlayer(user: User, textChannel: TextChannel, crossinline command: (player: Player) -> Unit) {
@@ -43,12 +47,12 @@ object DiscordFunctions {
     fun TextChannel.queueMessage(message: String) = sendMessage(message).queue()
 
     fun TextChannel.queueSimpleEmbedMessage(title: String, color: Color, message: String, image: String? = null) {
-        val eb = EmbedBuilder()
-        eb.setTitle(title, null)
-        eb.setColor(color)
-        eb.setDescription(message)
-        eb.setThumbnail(image)
-        sendMessage(eb.build()).queue()
+        queueEmbedMessage { eb ->
+            eb.setTitle(title, null)
+            eb.setColor(color)
+            eb.setDescription(message)
+            eb.setThumbnail(image)
+        }
     }
 
     fun TextChannel.queueEmbedMessage(builder: (embedBuilder: EmbedBuilder) -> Unit) {
@@ -85,6 +89,8 @@ object DiscordFunctions {
 }
 
 fun String.asProperSubjectType(number: Int, plural: String = "${this}s") = if (number == 1) this else plural
+val String.mentionToId: String
+    get() = replace("<@", "").replace(">", "").replace("!", "")
 fun <T> Array<T>.randomItem(): T {
     return this[ThreadLocalRandom.current().nextInt(size)]
 }

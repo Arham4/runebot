@@ -29,7 +29,7 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
     var cooldown: Long = 0
 
     init {
-        val playerSQL = selectPlayerSQL()?.fetchAny()
+        val playerSQL = selectPlayerSQL(user)?.fetchAny()
         if (playerSQL != null) {
             instantiateVariables(playerSQL)
         } else {
@@ -61,7 +61,7 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
                     .set(table.ITEM_COUNTS, Array(0, {0}))
                     .execute()
         }
-        instantiateVariables(selectPlayerSQL()!!.fetchAny())
+        instantiateVariables(selectPlayerSQL(user)!!.fetchAny())
         skills.addExperience(3, 1154)
         textChannel?.queueMessage("Welcome to RuneBot ${user.asMention}! Your account has successfully been created!")
     }
@@ -97,18 +97,20 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
         ItemFunctions.saveItems(this@Player)
     }
 
-    /**
-     * Used to provide an easy-to-use DSLContext and table reference to make typing less static.
-     */
-    fun <K> sql(query: (dsl: DSLContext, table: Players) -> K): K {
-        return query(DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES), Players.PLAYERS)
-    }
+    companion object {
+        /**
+         * Used to provide an easy-to-use DSLContext and table reference to make typing less static.
+         */
+        fun <K> sql(query: (dsl: DSLContext, table: Players) -> K): K {
+            return query(DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES), Players.PLAYERS)
+        }
 
-    /**
-     * This function is nullable due to the fact that the player might not be found.
-     */
-    fun selectPlayerSQL(): SelectConditionStep<PlayersRecord>? {
-        return sql { dsl, table -> dsl.selectFrom(table).where(table.DISCORD_ID.eq(user.id)) }
+        /**
+         * This function is nullable due to the fact that the player might not be found.
+         */
+        fun selectPlayerSQL(user: User): SelectConditionStep<PlayersRecord>? {
+            return sql { dsl, table -> dsl.selectFrom(table).where(table.DISCORD_ID.eq(user.id)) }
+        }
     }
 }
 
@@ -156,7 +158,7 @@ class Skills(val player: Player) {
     }
 
     private fun saveStats() {
-        player.sql { dsl, table ->
+        Player.sql { dsl, table ->
             dsl.update(table).set(table.LEVELS, levels)
                     .set(table.EXPERIENCES, experiences)
                     .set(table.TOTAL_EXP, totalExp)

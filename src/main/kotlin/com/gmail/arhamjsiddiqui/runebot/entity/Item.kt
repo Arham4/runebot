@@ -64,7 +64,7 @@ object ItemFunctions {
     }
 
     fun saveItems(player: Player) {
-        player.sql { dsl, table ->
+        Player.sql { dsl, table ->
             dsl.update(table).set(table.ITEM_IDS, player.items.map { it.id }.toTypedArray())
                     .set(table.ITEM_COUNTS, player.items.map{ it.count }.toTypedArray())
                     .where(table.DISCORD_ID.eq(player.asDiscordUser.id))
