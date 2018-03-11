@@ -94,6 +94,11 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
         ItemFunctions.saveItems(this@Player)
     }
 
+    private operator fun ArrayList<Item>.minusAssign(item: Item) {
+        remove(item)
+        ItemFunctions.saveItems(this@Player)
+    }
+
     /**
      * Used to provide an easy-to-use DSLContext and table reference to make typing less static.
      */
