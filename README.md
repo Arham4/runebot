@@ -28,3 +28,7 @@ r.train SKILL
 ```
 r.help
 ```
+- An items system, including a command to check items available.
+```
+r.items
+```
