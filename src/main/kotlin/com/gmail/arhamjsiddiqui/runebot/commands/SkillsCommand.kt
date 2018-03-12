@@ -29,12 +29,12 @@ class SkillsCommand : CommandExecutor {
             CommandFunctions.withPlayer(user, textChannel) { player ->
                 val template = File("./data/images/blank_skills.png")
                 val newFile = File("./data/images/skills_${user.name}.png")
-                val fontName = "RuneScape UF"
+                val fontName = "Times New Roman Thin"
 
                 val image = ImageIO.read(template)
                 val graphics = image.graphics
                 graphics.color = Color(0xFF, 0x8C, 0x00)
-                graphics.font = Font(fontName, Font.PLAIN, 20)
+                graphics.font = Font(fontName, Font.PLAIN, 16)
                 var indices = arrayOf(0, 2, 1, 4, 5, 6, 20, 22, 24)
                 repeat(9) { i ->
                     graphics.drawString("${player.skills.levels[indices[i]].zeroToOne()}", 60, 61 + (i * (29)) - i)
@@ -47,7 +47,7 @@ class SkillsCommand : CommandExecutor {
                 repeat(8) { i ->
                     graphics.drawString("${player.skills.levels[indices[i]].zeroToOne()}", 190, 61 + (i * (29)) - i)
                 }
-                graphics.font = Font(fontName, Font.PLAIN, 14)
+                graphics.font = Font(fontName, Font.PLAIN, 12)
                 graphics.drawString("${player.skills.totalLevel}", 174, 286)
                 graphics.dispose()
 
