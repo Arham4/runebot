@@ -2,6 +2,7 @@ package com.gmail.arhamjsiddiqui.runebot
 
 import com.gmail.arhamjsiddiqui.runebot.commands.HelpCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.ItemsCommand
+import com.gmail.arhamjsiddiqui.runebot.commands.SkillsCommand
 import com.gmail.arhamjsiddiqui.runebot.commands.TrainCommand
 import com.gmail.arhamjsiddiqui.runebot.data.CONFIG
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
@@ -14,6 +15,9 @@ import net.dv8tion.jda.core.JDA
 import net.dv8tion.jda.core.JDABuilder
 import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
+import java.awt.Font
+import java.awt.GraphicsEnvironment
+import java.io.File
 
 /**
  * @author Arham 4
@@ -22,6 +26,11 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
+        /**
+         * Register font for writing skills on image with RuneScape font.
+         */
+        val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
+        ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File("./runescape_uf.ttf")))
     }
 
     init {
@@ -52,6 +61,7 @@ object RuneBot {
             cmd.registerCommand(HelpCommand(cmd))
             cmd.registerCommand(TrainCommand())
             cmd.registerCommand(ItemsCommand())
+            cmd.registerCommand(SkillsCommand())
         }
 
         jda.presence.game = Game.playing("r.help")

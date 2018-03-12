@@ -55,7 +55,7 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
                     .set(table.DISCORD_ID, user.id)
                     .set(table.TOTAL_LEVEL, 0)
                     .set(table.TOTAL_EXP, 0)
-                    .set(table.LEVELS, Array(25, {0}))
+                    .set(table.LEVELS, Array(25, {1}))
                     .set(table.EXPERIENCES, Array(25, {0}))
                     .set(table.ITEM_IDS, Array(0, {0}))
                     .set(table.ITEM_COUNTS, Array(0, {0}))
@@ -148,6 +148,7 @@ class Skills(val player: Player) {
             addExperience(3, exp / 3)
         }
         if (levels[skillId] != tempLevel) {
+            calculateTotalLevel()
             if (levels[skillId] != 1) {
                 player.textChannel?.queueSimpleEmbedMessage("Congratulations! Level up!", Color(0xfdcf70),
                         "Congratulations ${player.asDiscordUser.asMention}! You are now " +
@@ -155,6 +156,11 @@ class Skills(val player: Player) {
                         SkillsData.imageIconFor(skillId))
             }
         }
+    }
+
+    private fun calculateTotalLevel() {
+        totalLevel = 0
+        levels.forEach { totalLevel += it }
     }
 
     private fun saveStats() {

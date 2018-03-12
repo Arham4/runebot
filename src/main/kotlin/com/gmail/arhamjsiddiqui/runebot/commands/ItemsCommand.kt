@@ -12,7 +12,7 @@ import net.dv8tion.jda.core.entities.User
 
 class ItemsCommand : CommandExecutor {
 
-    @Command(aliases = ["r.items"], async = true, usage = "r.items [Optional: @USER]", description = "Shows the items you have.")
+    @Command(aliases = ["r.items"], async = true, usage = "r.items [Optional: @USER]", description = "Shows the items you or another player have.")
     fun onItemsCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
         var user = theUser
         if (!args.isEmpty()) {
