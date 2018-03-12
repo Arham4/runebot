@@ -20,7 +20,7 @@ import javax.imageio.ImageIO
 class SkillsCommand : CommandExecutor {
 
     @Command(aliases = ["r.skills"], async = true, usage = "r.skills [Optional: @USER]", description = "Shows the stats you or another player have.")
-    fun onItemsCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
+    fun onSkillsCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
         var user = theUser
         if (!args.isEmpty()) {
             user = RuneBot.BOT.getUserById(args[0].mentionToId)

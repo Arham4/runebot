@@ -30,7 +30,7 @@ object RuneBot {
          * Register font for writing skills on image with RuneScape font.
          */
         val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
-        ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File("./runescape_uf.ttf")))
+        ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File("./data/fonts/runescape_uf.ttf")))
     }
 
     init {
