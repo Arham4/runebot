@@ -22,7 +22,7 @@ class HelpCommand(private val commandHandler: CommandHandler) : CommandExecutor 
             if (usage.isEmpty()) {
                 usage = simpleCommand.commandAnnotation.aliases[0]
             }
-            builder.append(usage)
+            builder.append("- $usage")
             val description = simpleCommand.commandAnnotation.description
             if (description != "none") {
                 builder.append(" | ").append(description)
