@@ -64,7 +64,7 @@ object RuneBot {
             cmd.registerCommand(SkillsCommand())
         }
 
-        jda.presence.game = Game.playing("r.help")
+        jda.presence.game = Game.playing("r.help | r.commands")
 
         jda
     }
