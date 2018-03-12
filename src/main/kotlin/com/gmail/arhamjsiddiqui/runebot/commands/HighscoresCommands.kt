@@ -47,8 +47,9 @@ class HighscoresCommands : CommandExecutor {
         onCommand(args, theUser, textChannel, { player ->
             val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator()).subList(0, if (RuneBot.players.size > 10) 10 else RuneBot.players.size)
             var message = "Top 10 players by total level:\n```\n"
+            message += "Name - Total Level - Total EXP\n"
             sortedList.forEachIndexed { index, rankedPlayer ->
-                message += "${index + 1}. ${rankedPlayer.asDiscordUser.name}\n"
+                message += "${index + 1}. ${rankedPlayer.asDiscordUser.name} - Level: ${rankedPlayer.skills.totalLevel.zeroToOne()} - EXP: ${rankedPlayer.skills.totalExp}\n"
             }
             message += "```"
             textChannel.queueMessage(message)
@@ -61,8 +62,9 @@ class HighscoresCommands : CommandExecutor {
             if (skillId != null) {
                 val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator(skillId)).subList(0, if (RuneBot.players.size > 10) 10 else RuneBot.players.size)
                 var message = "Top 10 players by ${SkillsData.skills.skillNameFor[skillId]!!.capitalize()}:\n```\n"
+                message += "Name - Level - EXP\n"
                 sortedList.forEachIndexed { index, rankedPlayer ->
-                    message += "${index + 1}. ${rankedPlayer.asDiscordUser.name}\n"
+                    message += "${index + 1}. ${rankedPlayer.asDiscordUser.name} - Level: ${rankedPlayer.skills.levels[skillId].zeroToOne()} - EXP: ${rankedPlayer.skills.experiences[skillId]}\n"
                 }
                 message += "```"
                 textChannel.queueMessage(message)
@@ -96,6 +98,10 @@ class HighscoresCommands : CommandExecutor {
 
     private fun String.isUser(): Boolean {
         return this.startsWith("<@") && this.endsWith(">")
+    }
+
+    private fun Int.zeroToOne(): Int {
+        return if (this == 0) 1 else this
     }
 }
 
