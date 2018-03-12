@@ -1,8 +1,10 @@
 # RuneBot: A RuneScape-emulating Discord bot
-<img src="https://i.imgur.com/OMgVAM6.jpg" width="200" height="200" /></img>
+<p><img src="https://i.imgur.com/OMgVAM6.jpg" width="200" height="200" /></img></p>
 
 ## What is it?
 RuneBot is a Discord bot that aims to be an emulation of RuneScape, much like the concept behind [Pokébot](https://github.com/Wonder-Toast/Pokebot).
+
+### [Click here to add the bot to your Discord!](https://tinyurl.com/AddRuneBot)
 
 ## Setup
 A config.yaml file must be made in the source root. The format for the YAML file is as follows:
