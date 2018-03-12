@@ -33,6 +33,14 @@ r.items [Optional: @USER]
 ```
 r.train SKILL
 ```
+The formula for EXP is the following:
+```
+A random number from 
+((15 * SKILL_LEVEL) 
+to 
+((a 1% possibility of (15 * SKILL_LEVEL) to the power of 1.5) 
+    OR ((15 * SKILL_LEVEL) to the power of 1.2))).
+```
 This includes the ability to view those skills too (with the perk of it being a cool generated image!) (and the added benefit of checking other players' too!):
 ```
 r.skills [Optional: @USER]
