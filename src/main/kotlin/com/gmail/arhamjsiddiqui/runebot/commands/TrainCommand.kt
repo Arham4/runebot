@@ -34,16 +34,24 @@ class TrainCommand : CommandExecutor {
                 textChannel.queueMessage("You have earned $exp EXP! Total EXP in ${skillName.capitalize()}: "
                         + player.skills.experiences[skillId])
             } else {
-                textChannel.queueMessage("Invalid skill name! Only the following can be used:\n```" +
-                        "${SkillsData.skills.skillNameFor.toPresentableString()}```\nNicknames are available " +
-                        "(for example: `r.train attack` can be `r.train atk`).")
+                queueInvalidSkillNameMessage(textChannel, "r.train")
             }
         }
     }
 
-    private fun Map<Int, String>.toPresentableString(): String {
-        var output = ""
-        keys.forEach { output += "r.train ${this[it]}\n" }
-        return output
+    companion object {
+        fun queueInvalidSkillNameMessage(textChannel: TextChannel, command: String) {
+            textChannel.queueMessage("Invalid skill name! Only the following can be used:\n```" +
+                    "${SkillsData.skills.skillNameFor.toPresentableString(command)}```\nNicknames are available " +
+                    "(for example: `$command attack` can be `$command atk`).")
+        }
+
+        private fun Map<Int, String>.toPresentableString(command: String): String {
+            var output = ""
+            keys.forEach { output += "$command ${this[it]}\n" }
+            return output
+        }
     }
+
+
 }
