@@ -20,6 +20,11 @@ After that, simply run RuneBot.kt!
 
 ## Features
 - Creation of a character, made by using any command. Your character is linked to your discord account.
+- A highscore system!
+```
+r.rank [Optional: SKILL] [Optional: @USER] - gets the rank of a player in that certain skill or total level.
+r.highscore | r.ranks [Optional: SKILL] - gets the top 10 players for a certain skill or total level.
+```
 - An items system, including a command to check items you currently own (and the ability to check other players' too!).
 ```
 r.items [Optional: @USER]
