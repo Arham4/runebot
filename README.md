@@ -20,7 +20,7 @@ After that, simply run RuneBot.kt!
 
 ## Features
 - Creation of a character, made by using any command. Your character is linked to your discord account.
-- An items system, including a command to check items available (and the ability to check other players' too!).
+- An items system, including a command to check items you currently own (and the ability to check other players' too!).
 ```
 r.items [Optional: @USER]
 ```
