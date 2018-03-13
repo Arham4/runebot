@@ -94,10 +94,11 @@ val String.mentionToId: String
 fun <T> Array<T>.randomItem(): T {
     return this[ThreadLocalRandom.current().nextInt(size)]
 }
-inline fun <K> ifPercentage(percentage: Int, action: () -> K): K? {
+inline fun ifPercentage(percentage: Int, action: () -> Unit): Boolean {
     val number = ThreadLocalRandom.current().nextInt(0, 100)
     if (number <= percentage) {
-        return action()
+        action()
+        return true
     }
-    return null
+    return false
 }
