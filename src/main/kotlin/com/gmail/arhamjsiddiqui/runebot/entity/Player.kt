@@ -5,6 +5,7 @@ import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
+import com.gmail.arhamjsiddiqui.runebot.data.SkillsData.skills
 import com.gmail.arhamjsiddiqui.runebot.ifPercentage
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
@@ -70,8 +71,10 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
         skills.addExperience(skillId, exp)
         ifPercentage(10) {
             val item = ItemFunctions.generateRandomItem()
-            addItem(item)
-            textChannel?.queueItemMessage(item)
+            if (skills.hasRequirementsForItem(item)) {
+                addItem(item)
+                textChannel?.queueItemMessage(item)
+            }
         }
     }
 
@@ -119,7 +122,7 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
  *
  * @author Arham 4
  */
-class Skills(val player: Player) {
+class Skills(val player: Player){
     var totalLevel: Int = 0
         internal set
     var totalExp: Int = 0
@@ -172,5 +175,20 @@ class Skills(val player: Player) {
                     .where(table.DISCORD_ID.eq(player.asDiscordUser.id))
                     .execute()
         }
+    }
+
+    fun hasRequirementsForItem(item: Item): Boolean {
+        val requirements = items.getRequirementsForItem(item.name)
+        var hasRequirements = true
+        requirements.forEach { requirement ->
+            val skillId = skills.skillIdFor[requirement[0] as String]
+            val skillRequirement = requirement[1] as Int
+            if (levels[skillId!!] < skillRequirement) {
+                hasRequirements = false
+            } else {
+                println("${levels[skillId]} - $skillRequirement")
+            }
+        }
+        return hasRequirements
     }
 }

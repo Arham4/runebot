@@ -31,7 +31,11 @@ enum class Rarity(val color: Color) {
     COMMON(Color.YELLOW), UNCOMMON(Color.ORANGE), RARE(Color.RED)
 }
 
-data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, val rareItems: Array<Int>) {
+data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, val rareItems: Array<Int>, private val statRequirements: Map<String, Array<Any>>) {
+    /**
+     * Need to find a better way than to do Array<Any> @ statRequirements
+     */
+
     override fun equals(other: Any?): Boolean {
         if (this === other) return true
         if (javaClass != other?.javaClass) return false
@@ -41,6 +45,7 @@ data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, 
         if (!Arrays.equals(commonItems, other.commonItems)) return false
         if (!Arrays.equals(uncommonItems, other.uncommonItems)) return false
         if (!Arrays.equals(rareItems, other.rareItems)) return false
+        if (statRequirements != other.statRequirements) return false
 
         return true
     }
@@ -49,7 +54,12 @@ data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, 
         var result = Arrays.hashCode(commonItems)
         result = 31 * result + Arrays.hashCode(uncommonItems)
         result = 31 * result + Arrays.hashCode(rareItems)
+        result = 31 * result + statRequirements.hashCode()
         return result
+    }
+
+    fun getRequirementsForItem(name: String): List<Array<Any>> {
+        return statRequirements.filter { entry -> name.toLowerCase().startsWith(entry.key.toLowerCase()) }.map { it -> it.value }
     }
 }
 

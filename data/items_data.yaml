@@ -4,8 +4,37 @@ commonItems: [
   4405
 ]
 uncommonItems: [
-  4151, 4087, 11732, 1187, 1052, 7462
+  4151, 4087, 11732, 1187
 ]
 rareItems: [
   14484, 11694
 ]
+statRequirements:
+  "steel plate": ["defence", 5]
+  "steel full": ["defence", 5]
+  "steel kite": ["defence", 5]
+  "steel scim": ["attack", 5]
+  "black plate": ["defence", 10]
+  "black full": ["defence", 10]
+  "black kite": ["defence", 10]
+  "black scim": ["attack", 10]
+  "mithril plate": ["defence", 20]
+  "mithril full": ["defence", 20]
+  "mithril kite": ["defence", 20]
+  "mithril scim": ["attack", 20]
+  "adamant plate": ["defence", 30]
+  "adamant full": ["defence", 30]
+  "adamant kite": ["defence", 30]
+  "adamant scim": ["attack", 30]
+  "rune plate": ["defence", 40]
+  "rune full": ["defence", 40]
+  "rune kite": ["defence", 40]
+  "rune scim": ["attack", 40]
+  "dragon plate": ["defence", 60]
+  "dragon full": ["defence", 60]
+  "dragon boots": ["defence", 60]
+  "dragon sq": ["defence", 60]
+  "dragon scim": ["attack", 60]
+  "dragon claw": ["attack", 60]
+  "abyssal whip": ["attack", 70]
+  "armadyl godsword": ["attack", 75]
