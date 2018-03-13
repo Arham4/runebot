@@ -1,5 +1,6 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
+import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueItemMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
@@ -106,6 +107,18 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
          */
         fun <K> sql(query: (dsl: DSLContext, table: Players) -> K): K {
             return query(DSL.using(RuneBot.DATASOURCE, SQLDialect.POSTGRES), Players.PLAYERS)
+        }
+
+        /**
+         * Used to do a certain action on every single player in the SQL database. Usually used for patches.
+         */
+        fun forEveryPlayerSQL(action: (player: Player) -> Unit) {
+            Player.sql { dsl, table -> dsl.selectFrom(Players.PLAYERS) }.forEach { record ->
+                if (record.discordId != null && RuneBot.BOT.getUserById(record.discordId) != null) {
+                    val player = DatabaseFunctions.fetchPlayer(RuneBot.BOT.getUserById(record.discordId))
+                    action(player)
+                }
+            }
         }
 
         /**
