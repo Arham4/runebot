@@ -15,9 +15,6 @@ import net.dv8tion.jda.core.entities.Game
 import net.dv8tion.jda.core.entities.User
 import org.jooq.SQLDialect
 import org.jooq.impl.DSL
-import java.awt.Font
-import java.awt.GraphicsEnvironment
-import java.io.File
 
 /**
  * @author Arham 4
@@ -26,11 +23,6 @@ object RuneBot {
 
     @JvmStatic
     fun main(args: Array<String>) {
-        /**
-         * Register font for writing skills on image with RuneScape font.
-         */
-        val ge = GraphicsEnvironment.getLocalGraphicsEnvironment()
-        ge.registerFont(Font.createFont(Font.TRUETYPE_FONT, File("./data/fonts/runescape_uf.ttf")))
         registerAllPlayers()
     }
 
