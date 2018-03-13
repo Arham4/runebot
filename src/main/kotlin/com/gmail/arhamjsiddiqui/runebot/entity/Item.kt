@@ -1,10 +1,9 @@
 package com.gmail.arhamjsiddiqui.runebot.entity
 
-import com.gmail.arhamjsiddiqui.runebot.data.YAMLParse
+import com.gmail.arhamjsiddiqui.runebot.data.ItemData.items
 import com.gmail.arhamjsiddiqui.runebot.randomItem
 import com.mikebull94.rsapi.RuneScapeAPI
 import java.awt.Color
-import java.util.*
 import java.util.concurrent.ThreadLocalRandom
 
 /**
@@ -31,38 +30,6 @@ enum class Rarity(val color: Color) {
     COMMON(Color.YELLOW), UNCOMMON(Color.ORANGE), RARE(Color.RED)
 }
 
-data class ItemsDto(val commonItems: Array<Int>, val uncommonItems: Array<Int>, val rareItems: Array<Int>, private val statRequirements: Map<String, Array<Any>>) {
-    /**
-     * Need to find a better way than to do Array<Any> @ statRequirements
-     */
-
-    override fun equals(other: Any?): Boolean {
-        if (this === other) return true
-        if (javaClass != other?.javaClass) return false
-
-        other as ItemsDto
-
-        if (!Arrays.equals(commonItems, other.commonItems)) return false
-        if (!Arrays.equals(uncommonItems, other.uncommonItems)) return false
-        if (!Arrays.equals(rareItems, other.rareItems)) return false
-        if (statRequirements != other.statRequirements) return false
-
-        return true
-    }
-
-    override fun hashCode(): Int {
-        var result = Arrays.hashCode(commonItems)
-        result = 31 * result + Arrays.hashCode(uncommonItems)
-        result = 31 * result + Arrays.hashCode(rareItems)
-        result = 31 * result + statRequirements.hashCode()
-        return result
-    }
-
-    fun getRequirementsForItem(name: String): List<Array<Any>> {
-        return statRequirements.filter { entry -> name.toLowerCase().startsWith(entry.key.toLowerCase()) }.map { it -> it.value }
-    }
-}
-
 object ItemFunctions {
     fun generateRandomItem(): Item {
         val randomNumber = ThreadLocalRandom.current().nextInt(1, 101)
@@ -82,6 +49,4 @@ object ItemFunctions {
         }
     }
 }
-
-val items: ItemsDto = YAMLParse.parseDto("data/items_data.yaml", ItemsDto::class)
 val GRAND_EXCHANGE_API = RuneScapeAPI.createHttp().grandExchange()

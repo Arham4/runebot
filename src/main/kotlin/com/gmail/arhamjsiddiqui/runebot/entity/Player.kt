@@ -5,6 +5,7 @@ import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueItemMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueSimpleEmbedMessage
 import com.gmail.arhamjsiddiqui.runebot.RuneBot
+import com.gmail.arhamjsiddiqui.runebot.data.ItemData.items
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData.skills
 import com.gmail.arhamjsiddiqui.runebot.ifPercentage
@@ -113,7 +114,7 @@ class Player(private val user: User, var textChannel: TextChannel? = null) {
          * Used to do a certain action on every single player in the SQL database. Usually used for patches.
          */
         fun forEveryPlayerSQL(action: (player: Player) -> Unit) {
-            Player.sql { dsl, table -> dsl.selectFrom(Players.PLAYERS) }.forEach { record ->
+            Player.sql { dsl, _ -> dsl.selectFrom(Players.PLAYERS) }.forEach { record ->
                 if (record.discordId != null && RuneBot.BOT.getUserById(record.discordId) != null) {
                     val player = DatabaseFunctions.fetchPlayer(RuneBot.BOT.getUserById(record.discordId))
                     action(player)
