@@ -17,48 +17,50 @@ import net.dv8tion.jda.core.entities.User
  */
 class HighscoresCommands : CommandExecutor {
 
-    @Command(aliases = ["r.rank"], usage = "r.rank [Optional: SKILL] [Optional: @USER]", description = "Shows you or another player's current rank in the highscores of either a specific skill or in total level.")
+    @Command(aliases = ["r.rank"], usage = "r.rank [Optional: \"global\"] [Optional: SKILL] [Optional: @USER]", description = "Shows you or another player's current rank in the highscores of either a specific skill or in total level.")
     fun onRankCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
-        onCommand(args, theUser, textChannel, { player ->
-            val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator())
+        onCommand(args, theUser, textChannel, { player, global ->
+            val sortedList = RuneBot.players.filterKeys { if (!global) textChannel.guild.isMember(it) else true }.map { it.value }.sortedWith(SkillsComparator())
             val rank = sortedList.indexOf(player) + 1
-            textChannel.queueMessage("${player.asDiscordUser.asMention}'s total level rank: ${rank.toString().bold()}")
-        }, { player ->
+            textChannel.queueMessage("${player.asDiscordUser.asMention}'s total level rank${if (global) " globally" else ""}: ${rank.toString().bold()}")
+        }, { player, global ->
             val skillName = let {
-                val input = args[0].toLowerCase()
+                val input = if (!global) args[0].toLowerCase() else args[1].toLowerCase()
                 SkillsData.skills.skillNameForNickname[input] ?: input
             }
             val skillId = SkillsData.skills.skillIdFor[skillName]
             if (skillId != null) {
-                val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator(skillId))
+                val sortedList = RuneBot.players.filterKeys { if (!global) textChannel.guild.isMember(it) else true }.map { it.value }.sortedWith(SkillsComparator(skillId))
                 val rank = sortedList.indexOf(player) + 1
-                textChannel.queueMessage("${player.asDiscordUser.asMention}'s ${SkillsData.skills.skillNameFor[skillId]!!.capitalize()} rank: ${rank.toString().bold()}")
+                textChannel.queueMessage("${player.asDiscordUser.asMention}'s ${SkillsData.skills.skillNameFor[skillId]!!.capitalize()} rank${if (global) " globally" else ""}: ${rank.toString().bold()}")
             } else {
                 TrainCommand.queueInvalidSkillNameMessage(textChannel, "r.rank")
             }
         })
     }
 
-    @Command(aliases = ["r.highscore", "r.ranks"], usage = "r.highscore | r.ranks [Optional: SKILL]", description = "Shows the top 10 players in the highscores of either a specific skill or in total level.")
+    @Command(aliases = ["r.highscore", "r.ranks"], usage = "r.highscore | r.ranks [Optional: \"global\"][Optional: SKILL]", description = "Shows the top 10 players in the highscores of either a specific skill or in total level.")
     fun onHighscoreCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
-        onCommand(args, theUser, textChannel, { player ->
-            val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator()).subList(0, if (RuneBot.players.size > 10) 10 else RuneBot.players.size)
-            var message = "Top 10 players by total level:\n```\n"
+        onCommand(args, theUser, textChannel, { player, global ->
+            var sortedList = RuneBot.players.filterKeys { if (!global) textChannel.guild.isMember(it) else true }.map { it.value }.sortedWith(SkillsComparator())
+            sortedList = sortedList.subList(0, if (sortedList.size > 10) 10 else sortedList.size)
+            var message = "Top 10 players by total level${if (global) " globally" else ""}:\n```\n"
             message += "Name - Total Level - Total EXP\n"
             sortedList.forEachIndexed { index, rankedPlayer ->
                 message += "${index + 1}. ${rankedPlayer.asDiscordUser.name} - Level: ${rankedPlayer.skills.totalLevel.zeroToOne()} - EXP: ${rankedPlayer.skills.totalExp}\n"
             }
             message += "```"
             textChannel.queueMessage(message)
-        }, { player ->
+        }, { player, global ->
             val skillName = let {
-                val input = args[0].toLowerCase()
+                val input = if (!global) args[0].toLowerCase() else args[1].toLowerCase()
                 SkillsData.skills.skillNameForNickname[input] ?: input
             }
             val skillId = SkillsData.skills.skillIdFor[skillName]
             if (skillId != null) {
-                val sortedList = RuneBot.players.map { it.value }.sortedWith(SkillsComparator(skillId)).subList(0, if (RuneBot.players.size > 10) 10 else RuneBot.players.size)
-                var message = "Top 10 players by ${SkillsData.skills.skillNameFor[skillId]!!.capitalize()}:\n```\n"
+                var sortedList = RuneBot.players.filterKeys { if (!global) textChannel.guild.isMember(it) else true }.map { it.value }.sortedWith(SkillsComparator(skillId))
+                sortedList = sortedList.subList(0, if (sortedList.size > 10) 10 else sortedList.size)
+                var message = "Top 10 players by ${SkillsData.skills.skillNameFor[skillId]!!.capitalize()}${if (global) " globally" else ""}:\n```\n"
                 message += "Name - Level - EXP\n"
                 sortedList.forEachIndexed { index, rankedPlayer ->
                     message += "${index + 1}. ${rankedPlayer.asDiscordUser.name} - Level: ${rankedPlayer.skills.levels[skillId].zeroToOne()} - EXP: ${rankedPlayer.skills.experiences[skillId]}\n"
@@ -75,19 +77,28 @@ class HighscoresCommands : CommandExecutor {
      * Albeit this inline functions structure is that of onRankCommand, it will still work due to the nature of the
      * commands differences.
      */
-    private inline fun onCommand(args: Array<String>, theUser: User, textChannel: TextChannel, crossinline totalLevelAction: (player: Player) -> Unit, crossinline specificSkillAction: (player: Player) -> Unit) {
+    private inline fun onCommand(args: Array<String>, theUser: User, textChannel: TextChannel, crossinline totalLevelAction: (player: Player, global: Boolean) -> Unit, crossinline specificSkillAction: (player: Player, global: Boolean) -> Unit) {
         var user = theUser
-        if (!args.isEmpty() && args[0].isUser()) {
-            user = RuneBot.BOT.getUserById(args[0].mentionToId)
-        } else if (args.size > 1 && args[1].isUser()) {
+        var global = false
+        if (!args.isEmpty()) {
+            if (args[0].isUser()) {
+                user = RuneBot.BOT.getUserById(args[0].mentionToId)
+            } else if (args[0].toLowerCase() == "global") {
+                global = true
+            }
+        }
+        if (args.size > 1 && args[1].isUser()) {
             user = RuneBot.BOT.getUserById(args[1].mentionToId)
+        }
+        if (args.size > 2 && args[2].isUser()) {
+            user = RuneBot.BOT.getUserById(args[2].mentionToId)
         }
         if (DatabaseFunctions.accountExists(user)) {
             CommandFunctions.withPlayer(user, textChannel) { player ->
-                if (args.isEmpty() || args[0].isUser()) {
-                    totalLevelAction(player)
-                } else if (!args[0].isUser() || args[1].isUser()) {
-                    specificSkillAction(player)
+                if (args.isEmpty() || args.size == 1 || args.size == 2 && global && args[1].isUser()) {
+                    totalLevelAction(player, global)
+                } else if (args.size == 2 && !global && args[1].isUser() || args.size == 3 && args[2].isUser()) {
+                    specificSkillAction(player, global)
                 }
             }
         }
