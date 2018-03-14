@@ -31,7 +31,7 @@ r.highscore | r.ranks [Optional: SKILL] - gets the top 10 players for a certain 
 ```
 r.items [Optional: @USER]
 ```
-- Training of skills.
+- Training of skills, with acquiring items that you have the requirements for while doing so.
 ```
 r.train SKILL
 ```
