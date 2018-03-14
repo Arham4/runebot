@@ -1,13 +1,10 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
-import com.gmail.arhamjsiddiqui.runebot.CommandFunctions
-import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
+import com.gmail.arhamjsiddiqui.runebot.*
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.MarkdownText.bold
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
-import com.gmail.arhamjsiddiqui.runebot.RuneBot
 import com.gmail.arhamjsiddiqui.runebot.data.SkillsData
 import com.gmail.arhamjsiddiqui.runebot.entity.Player
-import com.gmail.arhamjsiddiqui.runebot.mentionToId
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
 import net.dv8tion.jda.core.entities.TextChannel
@@ -94,10 +91,6 @@ class HighscoresCommands : CommandExecutor {
                 }
             }
         }
-    }
-
-    private fun String.isUser(): Boolean {
-        return this.startsWith("<@") && this.endsWith(">")
     }
 
     private fun Int.zeroToOne(): Int {

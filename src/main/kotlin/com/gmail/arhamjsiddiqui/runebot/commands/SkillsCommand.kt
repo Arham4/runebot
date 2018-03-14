@@ -1,10 +1,7 @@
 package com.gmail.arhamjsiddiqui.runebot.commands
 
-import com.gmail.arhamjsiddiqui.runebot.CommandFunctions
-import com.gmail.arhamjsiddiqui.runebot.DatabaseFunctions
+import com.gmail.arhamjsiddiqui.runebot.*
 import com.gmail.arhamjsiddiqui.runebot.DiscordFunctions.queueMessage
-import com.gmail.arhamjsiddiqui.runebot.RuneBot
-import com.gmail.arhamjsiddiqui.runebot.mentionToId
 import de.btobastian.sdcf4j.Command
 import de.btobastian.sdcf4j.CommandExecutor
 import net.dv8tion.jda.core.entities.TextChannel
@@ -22,7 +19,7 @@ class SkillsCommand : CommandExecutor {
     @Command(aliases = ["r.skills"], async = true, usage = "r.skills [Optional: @USER]", description = "Shows the stats you or another player have.")
     fun onSkillsCommand(args: Array<String>, theUser: User, textChannel: TextChannel) {
         var user = theUser
-        if (!args.isEmpty()) {
+        if (!args.isEmpty() && args[0].isUser()) {
             user = RuneBot.BOT.getUserById(args[0].mentionToId)
         }
         if (DatabaseFunctions.accountExists(user)) {
