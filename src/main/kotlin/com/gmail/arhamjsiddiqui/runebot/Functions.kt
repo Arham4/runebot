@@ -105,3 +105,6 @@ inline fun ifPercentage(percentage: Int, action: () -> Unit): Boolean {
 fun String.isUser(): Boolean {
     return this.startsWith("<@") && this.endsWith(">")
 }
+fun Int.zeroToOne(): Int {
+    return if (this == 0) 1 else this
+}

@@ -103,10 +103,6 @@ class HighscoresCommands : CommandExecutor {
             }
         }
     }
-
-    private fun Int.zeroToOne(): Int {
-        return if (this == 0) 1 else this
-    }
 }
 
 private class SkillsComparator(private val skillId: Int = -1) : Comparator<Player> {

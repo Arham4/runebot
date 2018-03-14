@@ -64,8 +64,4 @@ class SkillsCommand : CommandExecutor {
             textChannel.queueMessage("Unable to fetch skills. User is not registered.")
         }
     }
-
-    private fun Int.zeroToOne(): Int {
-        return if (this == 0) 1 else this
-    }
 }

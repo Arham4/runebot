@@ -11,6 +11,7 @@ import com.gmail.arhamjsiddiqui.runebot.data.SkillsData.skills
 import com.gmail.arhamjsiddiqui.runebot.ifPercentage
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.Players
 import com.gmail.arhamjsiddiqui.runebot.jooq.tables.records.PlayersRecord
+import com.gmail.arhamjsiddiqui.runebot.zeroToOne
 import net.dv8tion.jda.core.entities.TextChannel
 import net.dv8tion.jda.core.entities.User
 import org.jooq.DSLContext
@@ -177,7 +178,7 @@ class Skills(val player: Player){
 
     private fun calculateTotalLevel() {
         totalLevel = 0
-        levels.forEach { totalLevel += it }
+        levels.forEach { totalLevel += it.zeroToOne() }
     }
 
     private fun saveStats() {
