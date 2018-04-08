@@ -30,7 +30,10 @@ CREATE TABLE players (
 	item_counts int4[] NULL
 )
 ```
-Along with a PostgreSQL database, Kotlin must be installed and configured on your computer. After all of that, run RuneBot.kt!
+Along with a PostgreSQL database, Kotlin must be installed and configured on your computer. After all of that, use the following command to run the bot (if you choose to use command line/terminal):
+```
+mvn exec:java -Dexec.mainClass="com.gmail.arhamjsiddiqui.runebot.RuneBot"
+```
 
 ## Features
 - Creation of a character, made by using any command. Your character is linked to your discord account.
