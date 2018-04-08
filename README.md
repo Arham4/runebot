@@ -18,7 +18,19 @@ jdbc:
 discord:
   token: "TOKEN AS PER DISCORDAPP.COM"
 ```
-After that, simply run RuneBot.kt!
+You are also required to have a PostgreSQL database with a `players` table. The structure for the `players` table is as follows:
+```
+CREATE TABLE players (
+	discord_id text NULL,
+	total_level int4 NULL,
+	total_exp int4 NULL,
+	levels int4[] NULL,
+	experiences int4[] NULL,
+	item_ids int4[] NULL,
+	item_counts int4[] NULL
+)
+```
+Along with a PostgreSQL database, Kotlin must be installed and configured on your computer. After all of that, run RuneBot.kt!
 
 ## Features
 - Creation of a character, made by using any command. Your character is linked to your discord account.
