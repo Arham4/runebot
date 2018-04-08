@@ -30,6 +30,7 @@ object DatabaseFunctions {
 }
 object CommandFunctions {
     inline fun withPlayer(user: User, textChannel: TextChannel, crossinline command: (player: Player) -> Unit) {
+        if (user.isBot) return
         val player = DatabaseFunctions.fetchPlayer(user, textChannel)
         if (!player.cooldown.secondsPast(CONFIG.messageCooldown)) return
         command.invoke(player)
