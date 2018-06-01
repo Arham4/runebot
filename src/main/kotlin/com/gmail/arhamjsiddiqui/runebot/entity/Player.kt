@@ -206,4 +206,9 @@ class Skills(val player: Player){
         }
         return hasRequirements
     }
+
+    fun recalculateTotalExp() {
+        totalExp = 0
+        experiences.forEach { totalExp += it }
+    }
 }

@@ -115,11 +115,11 @@ private class SkillsComparator(private val skillId: Int = -1) : Comparator<Playe
                 else if (o1.skills.experiences[skillId] > o2.skills.experiences[skillId]) return -1
             }
         } else {
-            if (o1.skills.totalLevel > o2.skills.totalLevel) return -1
-            else if (o1.skills.totalLevel < o2.skills.totalLevel) return 1
+            if (o1.skills.totalExp > o2.skills.totalExp) return -1
+            else if (o1.skills.totalExp < o2.skills.totalExp) return 1
             else {
-                if (o1.skills.totalExp > o2.skills.totalExp) return -1
-                else if (o1.skills.totalExp < o2.skills.totalExp) return 1
+                if (o1.skills.totalLevel > o2.skills.totalLevel) return -1
+                else if (o1.skills.totalLevel < o2.skills.totalLevel) return 1
             }
         }
         return 0
