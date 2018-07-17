@@ -7,18 +7,7 @@ RuneBot is a Discord bot that aims to be an emulation of RuneScape, much like th
 ### [Click here to add the bot to your Discord!](https://tinyurl.com/AddRuneBot)
 
 ## Setup
-A config.yaml file must be made in the source root. The format for the YAML file is as follows:
-```
-messageCooldown: SECONDS
-jdbc:
-  url: "jdbc:postgresql://ADDRESS:PORT(typically 5432)/DB_NAME"
-  driver: "org.postgresql.Driver"
-  username: "DB_USERNAME"
-  password: "DB_PASSWORD"
-discord:
-  token: "TOKEN AS PER DISCORDAPP.COM"
-```
-You are also required to have a PostgreSQL database with a `players` table. The structure for the `players` table is as follows:
+You are required to have a PostgreSQL database with a `players` table. The structure for the `players` table is as follows:
 ```
 CREATE TABLE players (
 	discord_id text NULL,
@@ -30,9 +19,35 @@ CREATE TABLE players (
 	item_counts int4[] NULL
 )
 ```
-Along with a PostgreSQL database, Kotlin must be installed and configured on your computer. After all of that, use the following command to run the bot (if you choose to use command line/terminal):
+A config.yaml file must be made in the source root. The format for the YAML file is as follows:
+```
+messageCooldown: SECONDS
+jdbc:
+  url: "jdbc:postgresql://ADDRESS:PORT(typically 5432)/DB_NAME"
+  driver: "org.postgresql.Driver"
+  username: "DB_USERNAME"
+  password: "DB_PASSWORD"
+discord:
+  token: "TOKEN AS PER DISCORDAPP.COM"
+```
+Next, locate the pom.xml file and find the following:
+```
+                    <jdbc>
+                        <driver>org.postgresql.Driver</driver>
+                        <url>jdbc:postgresql://ADDRESS:PORT(typically 5432)/DB_NAME</url>
+                        <user>DB_USERNAME</user>
+                        <password>DB_PASSWORD</password>
+                    </jdbc>
+```
+Replace the info as done in the config.yaml.
+
+Kotlin must be installed and configured on your computer. After all of that, use the following command to run the bot (if you choose to use command line/terminal):
 ```
 mvn exec:java -Dexec.mainClass="com.gmail.arhamjsiddiqui.runebot.RuneBot"
+```
+Before running the bot, and if not compiled before, build the project using the following command:
+```
+mvn clean install
 ```
 
 ## Features
