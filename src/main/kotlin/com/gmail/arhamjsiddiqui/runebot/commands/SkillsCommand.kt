@@ -25,7 +25,7 @@ class SkillsCommand : CommandExecutor {
         if (DatabaseFunctions.accountExists(user)) {
             CommandFunctions.withPlayer(user, textChannel) { player ->
                 val template = File("./data/images/blank_skills.png")
-                val newFile = File("./data/images/skills_${user.name}.png")
+                val newFile = File("./data/images/skills_${user.id}.png")
                 val fontName = "Times New Roman Thin"
 
                 val image = ImageIO.read(template)
