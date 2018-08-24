@@ -48,24 +48,25 @@ object RuneBot {
     val players = hashMapOf<User, Player>()
 
     val BOT: JDA = let {
-        fun registerListeners(registrants: () -> Unit) {
-            registrants.invoke()
+        fun JDA.registerListeners(registrants: JDA.() -> Unit) {
+            registrants.invoke(this)
         }
-        fun registerCommands(registrants: () -> Unit) {
-            registrants.invoke()
+
+        fun JDA3Handler.registerCommands(registrants: JDA3Handler.() -> Unit) {
+            registrants.invoke(this)
         }
 
         val jda = JDABuilder(AccountType.BOT).setToken(CONFIG.discord.token).buildAsync()
         val cmd = JDA3Handler(jda)
 
-        registerListeners {  }
-        registerCommands {
-            cmd.registerCommand(HelpCommand(cmd))
-            cmd.registerCommand(NicknamesCommand())
-            cmd.registerCommand(TrainCommand())
-            cmd.registerCommand(ItemsCommand())
-            cmd.registerCommand(SkillsCommand())
-            cmd.registerCommand(HighscoresCommands())
+        jda.registerListeners { }
+        cmd.registerCommands {
+            registerCommand(HelpCommand(cmd))
+            registerCommand(NicknamesCommand())
+            registerCommand(TrainCommand())
+            registerCommand(ItemsCommand())
+            registerCommand(SkillsCommand())
+            registerCommand(HighscoresCommands())
         }
 
         jda.presence.game = Game.playing("r.help | r.commands")
