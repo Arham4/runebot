@@ -255,4 +255,6 @@ temp/
 # End of https://www.gitignore.io/api/node,intellij,webstorm
 
 /.idea/
+# Prevent configuration data from being leaked
 /config.yaml
+/test/config-tests.js

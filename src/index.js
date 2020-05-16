@@ -5,7 +5,7 @@ const CLIENT = new DISCORD.Client;
 
 CLIENT.on('ready', () => console.log(`Logged in as ${CLIENT.user.tag}!`));
 
-let fileContents = FILE_SYSTEM.readFileSync('./config.yaml');
-let config = YAML.safeLoadAll(fileContents)[0];
+const FILE_CONTENTS = FILE_SYSTEM.readFileSync('./config.yaml');
+const CONFIG = YAML.safeLoadAll(FILE_CONTENTS)[0];
 
-CLIENT.login(config.token);
+CLIENT.login(CONFIG.token);
